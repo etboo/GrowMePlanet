@@ -5,14 +5,18 @@ import com.yarrtest.balloon.base.ScreenLifecycleListener
 import com.yarrtest.balloon.managers.LevelManager
 import com.yarrtest.balloon.managers.ScoreManager
 import com.yarrtest.balloon.screens.game.behaviors.BaseBehavior
+import dagger.Module
+import javax.inject.Inject
 
 /**
  * Created by etb on 22.08.2018.
  */
-class GameController(
-        scoreManager: ScoreManager,
-        levelManager: LevelManager
-): InputListener(), ScreenLifecycleListener {
+@Module
+class GameController: InputListener(), ScreenLifecycleListener {
+
+    @Inject lateinit var levels: LevelManager
+
+    @Inject lateinit var score: ScoreManager
 
     //TODO: inject via DI
     val behaviors = listOf<BaseBehavior<*, *>>()

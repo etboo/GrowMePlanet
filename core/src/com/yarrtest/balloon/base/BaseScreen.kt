@@ -3,18 +3,21 @@ package com.yarrtest.balloon.base
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.scenes.scene2d.*
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.utils.viewport.Viewport
 
 /**
  * Created by etb on 21.08.2018.
  */
-abstract class BaseScreen<out T : BaseGame, out G : Viewport>(
+abstract class BaseScreen<out T : BaseGame, G : Viewport>(
         game: T, private var viewport: G
 ) : Screen {
 
     private var firstResume: Boolean = false
-    private var stage: BaseStage<G>? = null
+    protected var stage: BaseStage<G>? = null
     private val inputListeners = mutableSetOf<InputListener>()
 
     val game: BaseGame = game
@@ -114,10 +117,6 @@ abstract class BaseScreen<out T : BaseGame, out G : Viewport>(
 
     protected open fun menuPressed(): Boolean {
         return false
-    }
-
-    protected fun addActor(actor: Actor) {
-        stage?.addActor(actor)
     }
 
 }

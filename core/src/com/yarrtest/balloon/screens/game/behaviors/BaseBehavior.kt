@@ -9,10 +9,16 @@ import com.yarrtest.balloon.screens.game.views.BaseView
  */
 private const val TAG = "com.yarrtest.ballon.base.BaseBehavior"
 
-open class BaseBehavior<out M: Shape2D, out V: BaseView>(
+abstract class BaseBehavior<M: Shape2D, out V: BaseView>(
         protected val collider: M,
         protected val view: V
 ) {
+
+    init {
+        updateViewPosition(collider)
+    }
+
+    abstract protected fun updateViewPosition(collider: M)
 
     open fun act(delta: Float) {
         Gdx.app.log(TAG, "act $delta")
@@ -29,4 +35,5 @@ open class BaseBehavior<out M: Shape2D, out V: BaseView>(
         Gdx.app.log(TAG, "use default behavior, adding view to stage")
         view.attach()
     }
+
 }

@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.61'
+    ext.plugin_version = '2.3.1'
 
 
     repositories {
@@ -13,8 +14,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-
+        classpath "com.android.tools.build:gradle:$plugin_version"
     }
 }
 apply plugin: 'kotlin'
@@ -31,6 +31,7 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        daggerVersion = '2.11'
     }
 
     repositories {
@@ -108,3 +109,4 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+
