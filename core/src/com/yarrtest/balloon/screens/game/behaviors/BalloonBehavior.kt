@@ -1,19 +1,22 @@
 package com.yarrtest.balloon.screens.game.behaviors
 
 import com.badlogic.gdx.math.Circle
-import com.badlogic.gdx.math.Shape2D
-import com.yarrtest.balloon.UseCase
-import com.yarrtest.balloon.screens.game.models.ObjectModel
+import com.yarrtest.balloon.managers.level.PLAYER_MODEL
+import com.yarrtest.balloon.screens.game.models.GameObjectModel
+import com.yarrtest.balloon.screens.game.usecases.BalloonMoveCheckUseCase
+import com.yarrtest.balloon.screens.game.usecases.CollideDetectedUseCase
 import com.yarrtest.balloon.screens.game.views.Balloon
+import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by etb on 22.08.2018.
  */
-class BalloonBehavior(
-        model: ObjectModel,
+class BalloonBehavior @Inject constructor(
+        @Named(PLAYER_MODEL) model: GameObjectModel,
         view: Balloon,
-        private val isMoveValidUseCase: UseCase<Shape2D, Boolean>,
-        private val collideDetectedUseCase: UseCase<Unit, Unit>
+        private val moveValidator: BalloonMoveCheckUseCase,
+        private val collideDetected: CollideDetectedUseCase
 ): BaseBehavior<Circle, Balloon>(
         Circle(model.x, model.y, model.radius),
         view
@@ -25,10 +28,10 @@ class BalloonBehavior(
         super.act(delta)
 
         collider.y += velocity * delta
-        if(isMoveValidUseCase.invoke(collider)) {
+        if(moveValidator.invoke(collider)) {
             updateViewPosition()
         } else {
-            collideDetectedUseCase.invoke(Unit)
+            collideDetected.invoke(Unit)
         }
     }
 

@@ -1,6 +1,6 @@
 package com.yarrtest.balloon.di
 
-import com.yarrtest.balloon.managers.LevelManager
+import com.yarrtest.balloon.managers.level.LevelManager
 import com.yarrtest.balloon.managers.ScoreManager
 import com.yarrtest.balloon.services.StoreService
 import dagger.Module

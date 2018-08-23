@@ -3,6 +3,7 @@ package com.yarrtest.balloon.base
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -16,18 +17,14 @@ abstract class BaseScreen<out T : BaseGame, G : Viewport>(
         game: T, private var viewport: G
 ) : Screen {
 
-    private var firstResume: Boolean = false
+    private var firstResume = true
     protected var stage: BaseStage<G>? = null
     private val inputListeners = mutableSetOf<InputListener>()
 
     val game: BaseGame = game
-    val inputProcessor: InputMultiplexer
+    val inputProcessor = InputMultiplexer()
+    protected val assetManager = AssetManager()
     var lifecycleListener: ScreenLifecycleListener? = null
-
-    init {
-        this.firstResume = true
-        this.inputProcessor = InputMultiplexer()
-    }
 
     override fun resume() {
         if (this.firstResume) {

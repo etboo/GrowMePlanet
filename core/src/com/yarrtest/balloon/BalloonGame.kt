@@ -5,7 +5,7 @@ import com.yarrtest.balloon.base.BaseGame
 import com.yarrtest.balloon.di.DaggerGameComponent
 import com.yarrtest.balloon.di.GameComponent
 import com.yarrtest.balloon.di.Managers
-import com.yarrtest.balloon.screens.GameScreen
+import com.yarrtest.balloon.screens.game.GameScreen
 import com.yarrtest.balloon.services.StoreService
 
 /**

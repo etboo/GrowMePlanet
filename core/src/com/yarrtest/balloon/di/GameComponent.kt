@@ -1,7 +1,8 @@
 package com.yarrtest.balloon.di
 
 import com.yarrtest.balloon.BalloonGame
-import com.yarrtest.balloon.screens.GameScreen
+import com.yarrtest.balloon.screens.game.GameScreen
+import com.yarrtest.balloon.screens.game.di.ControllersProvider
 import com.yarrtest.balloon.screens.game.di.GameScreenComponent
 import com.yarrtest.balloon.services.StoreService
 import dagger.BindsInstance
@@ -27,6 +28,9 @@ interface GameComponent {
         fun build(): GameComponent
     }
 
-    fun plus(screen: GameScreen): GameScreenComponent
+    fun plus(
+            screen: GameScreen,
+            controllers: ControllersProvider
+    ): GameScreenComponent
 
 }
