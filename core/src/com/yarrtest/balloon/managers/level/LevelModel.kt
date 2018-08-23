@@ -6,30 +6,30 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Named
 
-const val PLAYER_MODEL = "player_model"
-const val MIN_RING_MODELS = "min_rings_model"
-const val MAX_RING_MODELS = "max_rings_model"
+const val PLANET_MODEL = "planet_model"
+const val BLACK_HOLE_MODEL = "black_hole_model"
+const val RING_MODEL = "ring_model"
 
 @Module
 data class LevelModel(
         private val player: GameObjectModel,
-        private val minRings: List<GameObjectModel>,
-        private val maxRings: List<GameObjectModel>
+        private val blackHole: GameObjectModel,
+        private val ring: GameObjectModel
 ) {
 
-    @Named(PLAYER_MODEL)
+    @Named(PLANET_MODEL)
     @SessionScope
     @Provides
     fun providePlayerModel(): GameObjectModel = player
 
-    @Named(MIN_RING_MODELS)
+    @Named(BLACK_HOLE_MODEL)
     @SessionScope
     @Provides
-    fun provideMinRingModels() = minRings
+    fun provideBlackHoleModel() = blackHole
 
-    @Named(MAX_RING_MODELS)
+    @Named(RING_MODEL)
     @SessionScope
     @Provides
-    fun provideMaxRingModels() = maxRings
+    fun provideRingModel() = ring
 
 }

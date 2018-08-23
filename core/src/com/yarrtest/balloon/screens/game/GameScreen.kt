@@ -12,7 +12,7 @@ import com.yarrtest.balloon.base.BaseScreen
 import com.yarrtest.balloon.screens.di.ScreenScope
 import com.yarrtest.balloon.screens.game.di.ControllersProvider
 import com.yarrtest.balloon.screens.game.di.GameScreenComponent
-import com.yarrtest.balloon.screens.game.views.Balloon
+import com.yarrtest.balloon.screens.game.views.Planet
 import com.yarrtest.balloon.screens.game.views.Ring
 import dagger.Module
 import dagger.Provides
@@ -22,7 +22,7 @@ import javax.inject.Inject
  * Created by etb on 21.08.2018.
  */
 
-private const val TAG = "com.yarrtest.balloon.screens.game.GameScreen"
+private const val TAG = "com.yarrtest.planet.screens.game.GameScreen"
 
 @Module
 class GameScreen(
@@ -84,9 +84,9 @@ class GameScreen(
 
     @ScreenScope
     @Provides
-    fun createBalloonView(): Balloon {
+    fun createPlanetView(): Planet {
         val texture = Texture(Gdx.files.internal("ball.png"))
-        return Balloon(layerHandler, texture)
+        return Planet(layerHandler, texture)
     }
 
     @ScreenScope

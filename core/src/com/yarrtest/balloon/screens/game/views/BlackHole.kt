@@ -6,18 +6,24 @@ import com.yarrtest.balloon.screens.game.Layer
 import com.yarrtest.balloon.screens.game.LayerHandler
 
 /**
- * Created by etb on 22.08.2018.
+ * Created by etb on 23.08.2018.
  */
-class Balloon(
+class BlackHole(
         private val layerHandler: LayerHandler,
         texture: Texture
 ): Image(texture), BaseView {
 
     override fun attach() {
-        layerHandler.addActorOnLayer(this, Layer.PLAYER_LEVEL)
+        layerHandler.addActorOnLayer(this, Layer.BACKGROUND)
     }
 
     override fun detach() {
         remove()
     }
+
+    override fun setSize(value: Float) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
 }

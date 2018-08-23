@@ -4,7 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.yarrtest.balloon.base.ScreenLifecycleListener
 import com.yarrtest.balloon.managers.ScoreManager
 import com.yarrtest.balloon.managers.level.LevelManager
-import com.yarrtest.balloon.screens.game.behaviors.BalloonBehavior
+import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
+import com.yarrtest.balloon.screens.game.behaviors.RingBehavior
 import com.yarrtest.balloon.screens.game.di.GameSessionComponent
 import com.yarrtest.balloon.screens.game.di.SessionScope
 import com.yarrtest.balloon.screens.game.usecases.BalloonMoveCheckUseCase
@@ -25,7 +26,9 @@ class GameController(
         private val levelManager: LevelManager
 ) : InputListener(), ScreenLifecycleListener {
 
-    @Inject lateinit var balloon: BalloonBehavior
+    @Inject lateinit var planet: PlanetBehavior
+
+    @Inject lateinit var ring: RingBehavior
 
     private var component: GameSessionComponent? = null
 
@@ -40,7 +43,8 @@ class GameController(
     }
 
     override fun onShow() {
-        balloon.start()
+        planet.start()
+        ring.start()
     }
 
     override fun onPause() {
@@ -50,20 +54,20 @@ class GameController(
     }
 
     override fun onHide() {
-        balloon.stop()
+        planet.stop()
     }
 
     override fun onDispose() {
     }
 
     fun update(delta: Float) {
-        balloon.act(delta)
+        planet.act(delta)
     }
 
     @SessionScope
     @Provides
     fun provideBalloonModeCheckUseCase()
-            = BalloonMoveCheckUseCase(emptyList())
+            = BalloonMoveCheckUseCase { ring.collider }
 
     @SessionScope
     @Provides
@@ -72,7 +76,8 @@ class GameController(
 
     private fun stopPrevBehaviors() {
         component?.let {
-            balloon.stop()
+            planet.stop()
+            ring.stop()
         }
     }
 }

@@ -8,4 +8,8 @@ interface BaseView {
     fun attach()
 
     fun detach()
+
+    fun setPosition(x: Float, y: Float)
+
+    fun setSize(value: Float)
 }

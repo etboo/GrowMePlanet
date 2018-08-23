@@ -14,7 +14,7 @@ class Ring(
         private val layerHandler: LayerHandler,
         frontTexture: Texture,
         backTexture: Texture
-): BaseView {
+) : BaseView {
 
     private val frontImage = Image(frontTexture)
     private val backImage = Image(backTexture)
@@ -29,11 +29,12 @@ class Ring(
         backImage.remove()
     }
 
-    fun setPosition(x: Float, y: Float) {
-
+    override fun setPosition(x: Float, y: Float) {
+        frontImage.setPosition(x, y - frontImage.height)
+        backImage.setPosition(x, y)
     }
 
-    fun setRadius(value: Float) {
+    override fun setSize(value: Float) {
 
     }
 

@@ -10,7 +10,7 @@ import com.yarrtest.balloon.screens.game.views.BaseView
 private const val TAG = "com.yarrtest.ballon.base.BaseBehavior"
 
 abstract class BaseBehavior<M: Shape2D, out V: BaseView>(
-        protected val collider: M,
+        val collider: M,
         protected val view: V
 ) {
 
