@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.yarrtest.balloon.BalloonGame
+import com.yarrtest.balloon.GrowMePlanetGame
 import com.yarrtest.balloon.base.AppConfig
 import com.yarrtest.balloon.base.BaseScreen
 import com.yarrtest.balloon.screens.di.ScreenScope
@@ -26,9 +26,9 @@ private const val TAG = "com.yarrtest.planet.screens.game.GameScreen"
 
 @Module
 class GameScreen(
-        game: BalloonGame,
+        game: GrowMePlanetGame,
         config: AppConfig
-) : BaseScreen<BalloonGame, FitViewport>(
+) : BaseScreen<GrowMePlanetGame, FitViewport>(
         game,
         FitViewport(config.camWidth, config.camHeight)
 ) {

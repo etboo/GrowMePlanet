@@ -11,7 +11,7 @@ import com.yarrtest.balloon.services.StoreService
 /**
  * Created by etb on 21.08.2018.
  */
-class BalloonGame(
+class GrowMePlanetGame(
         private val store: StoreService,
         private val config: AppConfig
 ): BaseGame(config) {

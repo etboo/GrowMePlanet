@@ -1,6 +1,6 @@
 package com.yarrtest.balloon.di
 
-import com.yarrtest.balloon.BalloonGame
+import com.yarrtest.balloon.GrowMePlanetGame
 import com.yarrtest.balloon.screens.game.GameScreen
 import com.yarrtest.balloon.screens.game.di.ControllersProvider
 import com.yarrtest.balloon.screens.game.di.GameScreenComponent
@@ -17,7 +17,7 @@ interface GameComponent {
     interface Builder {
 
         @BindsInstance
-        fun game(game: BalloonGame): Builder
+        fun game(game: GrowMePlanetGame): Builder
 
         @BindsInstance
         fun storeService(store: StoreService): Builder

@@ -14,7 +14,7 @@ class AndroidLauncher : AndroidApplication() {
     }
 
     private fun createGame(): ApplicationListener {
-        return BalloonGame(
+        return GrowMePlanetGame(
                 EmptyStoreServiceImpl(),
                 AndroidConfig()
         )
