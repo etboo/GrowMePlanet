@@ -2,7 +2,7 @@ package com.yarrtest.balloon.screens.game.di
 
 import com.yarrtest.balloon.managers.level.LevelModel
 import com.yarrtest.balloon.screens.game.GameController
-import com.yarrtest.balloon.screens.game.stages.StageRelatedBehaviors
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.StageRelatedBehaviors
 import dagger.Subcomponent
 
 @LevelScope

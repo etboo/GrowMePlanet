@@ -1,7 +1,8 @@
-package com.yarrtest.balloon.screens.game.stages
+package com.yarrtest.balloon.screens.game.behaviors.stage_related.di
 
-import com.yarrtest.balloon.screens.game.behaviors.FloatingPlanetBehavior
 import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.FloatingPlanetBehavior
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.StageRelatedBehaviors
 import javax.inject.Inject
 
 /**

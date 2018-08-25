@@ -10,13 +10,13 @@ sealed class GameObjectModel(
 ) {
 
     var x: Float = x
-        private set
+        protected set
 
     var y: Float = y
-        private set
+        protected set
 
     var radius: Float = radius
-        private set(value) {
+        protected set(value) {
             field = value
             observer?.sizeChanged(value * 2, value * 2)
         }
@@ -28,28 +28,43 @@ sealed class GameObjectModel(
             value?.sizeChanged(radius * 2, radius * 2)
         }
 
-    fun moveBy(diffX: Float = 0f, diffY: Float = 0f) {
-        x += diffX
-        y += diffY
-        observer?.positionChanged(x, y)
-    }
 }
 
 class PlanetModel(
         x: Float,
         y: Float,
         radius: Float
-) : GameObjectModel(x, y, radius)
+) : GameObjectModel(x, y, radius) {
+
+    fun moveBy(diffX: Float = 0f, diffY: Float = 0f) {
+        x += diffX
+        y += diffY
+        observer?.positionChanged(x, y)
+    }
+
+    fun grow(diff: Float) {
+        radius += diff
+    }
+}
+
+sealed class ObstacleModel(
+        x: Float,
+        y: Float,
+        radius: Float,
+        val score: Int
+): GameObjectModel(x, y, radius)
 
 class RingModel(
         x: Float,
         y: Float,
-        radius: Float
-) : GameObjectModel(x, y, radius)
+        radius: Float,
+        score: Int
+) : ObstacleModel(x, y, radius, score)
 
 class BlackHoleModel(
         x: Float,
         y: Float,
-        radius: Float
-) : GameObjectModel(x, y, radius)
+        radius: Float,
+        score: Int
+) : ObstacleModel(x, y, radius, score)
 

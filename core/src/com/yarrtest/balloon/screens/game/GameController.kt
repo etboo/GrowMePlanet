@@ -1,29 +1,36 @@
 package com.yarrtest.balloon.screens.game
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.yarrtest.balloon.UseCase
 import com.yarrtest.balloon.base.ScreenLifecycleListener
 import com.yarrtest.balloon.managers.ScoreManager
 import com.yarrtest.balloon.managers.level.LevelManager
 import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
 import com.yarrtest.balloon.screens.game.behaviors.RingBehavior
+import com.yarrtest.balloon.screens.game.behaviors.collider.Obstacle
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.Stage
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.FloatingStageBehaviors
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.GrowingStageBehaviors
 import com.yarrtest.balloon.screens.game.di.GameLevelComponent
 import com.yarrtest.balloon.screens.game.di.LevelScope
-import com.yarrtest.balloon.screens.game.stages.FloatingStageBehaviors
-import com.yarrtest.balloon.screens.game.stages.GrowthStageBehaviors
-import com.yarrtest.balloon.screens.game.stages.Stage
+import com.yarrtest.balloon.screens.game.models.ObstacleModel
 import com.yarrtest.balloon.screens.game.usecases.PlanetMoveCheckUseCase
-import com.yarrtest.balloon.screens.game.usecases.ScreenTouchesUseCase
 import com.yarrtest.balloon.screens.game.views.Planet
 import com.yarrtest.balloon.screens.game.views.Ring
 import dagger.Module
 import dagger.Provides
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by etb on 22.08.2018.
  */
-
-const val SCORE_PER_RING = 100
+const val GLOBAL_TOUCHES_USE_CASE = "GlobalTouchesUseCase"
+const val REGISTER_OBSTACLE_USE_CASE = "RegisterObstacleUseCase"
+const val UNREGISTER_OBSTACLE_USE_CASE = "UnregisterObstacleUseCase"
+const val GROWTH_TOUCH_UP_USE_CASE = "GrowthTouchUpUseCase"
+const val SCORED_USE_CASE = "ScoredUseCase"
 
 @Module
 class GameController(
@@ -31,11 +38,13 @@ class GameController(
         private val levelManager: LevelManager
 ) : InputListener(), ScreenLifecycleListener {
 
-    lateinit var planet: PlanetBehavior
-
+    //Behaviors
     @Inject
     lateinit var ring: RingBehavior
 
+    private var planet: PlanetBehavior? = null
+
+    //Views
     @Inject
     lateinit var planetView: Planet
     @Inject
@@ -45,20 +54,11 @@ class GameController(
 
     private lateinit var stage: Stage
 
-    fun loadLevel(gameScreen: GameScreen, index: Int) {
-        disposePrevBehaviors()
-
-        component = gameScreen.component?.plus(
-                this,
-                levelManager.loadLevel(index)
-        )
-        component?.inject(this)
-
-        switchStage(Stage.GROWTH_STAGE)
-    }
+    private val obstacles = mutableListOf<Obstacle>()
+    private var touchesListener: ScreenTouchesListener? = null
 
     override fun onShow() {
-        planet.attachView(planetView)
+        planet?.attachView(planetView)
     }
 
     override fun onPause() {
@@ -68,41 +68,103 @@ class GameController(
     }
 
     override fun onHide() {
-        planet.detachView()
+        planet?.detachView()
     }
 
     override fun onDispose() {
     }
 
+    override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+        touchesListener?.onTouchUp()
+    }
+
+    override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+        touchesListener?.let {
+            it.onTouchDown()
+            return true
+        }
+
+        return false
+    }
+
+    fun loadLevel(gameScreen: GameScreen, index: Int) {
+        disposeLevelBehaviors()
+
+        component = gameScreen.component?.plus(
+                this,
+                levelManager.loadLevel(index)
+        )
+        component?.inject(this)
+
+        switchStage(Stage.GROWING_STAGE)
+    }
+
     fun update(delta: Float) {
-        planet.act(delta)
+        planet?.act(delta)
     }
 
     @LevelScope
     @Provides
-    fun provideScreenTouchesUseCase() = ScreenTouchesUseCase()
+    @Named(GROWTH_TOUCH_UP_USE_CASE)
+    fun provideGrowthTouchUpUseCase() = {
+        touchesListener = null
+        switchStage(Stage.FLOATING_STAGE)
+    }
 
     @LevelScope
     @Provides
-    fun provideBalloonModeCheckUseCase() = PlanetMoveCheckUseCase { ring.collider }
+    @Named(GLOBAL_TOUCHES_USE_CASE)
+    fun provideScreenTouchesUseCase(): UseCase<@JvmWildcard ScreenTouchesListener?, @JvmWildcard Unit>
+            = { touchesListener = it }
+
+    @LevelScope
+    @Provides
+    @Named(REGISTER_OBSTACLE_USE_CASE)
+    fun provideObstaclesRegistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
+            = { obstacles.add(it)}
+
+    @LevelScope
+    @Provides
+    @Named(UNREGISTER_OBSTACLE_USE_CASE)
+    fun provideObstacleUnregistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
+            = { obstacles.remove(it) }
+
+    @LevelScope
+    @Provides
+    @Named(SCORED_USE_CASE)
+    fun provideScoredUseCase(): UseCase<@JvmWildcard ObstacleModel, @JvmWildcard Unit>
+            = { scoreManager.scored(it.score) }
+
+    @LevelScope
+    @Provides
+    fun provideBalloonModeCheckUseCase() = PlanetMoveCheckUseCase { obstacles.copy() }
 
     private fun switchStage(newStage: Stage) {
+        disposeStageBehaviors()
+
         stage = newStage
-        val behaviors = when(stage) {
-            Stage.GROWTH_STAGE -> GrowthStageBehaviors()
+
+        val behaviors = when (newStage) {
+            Stage.GROWING_STAGE -> GrowingStageBehaviors()
             Stage.FLOATING_STAGE -> FloatingStageBehaviors()
         }
 
         component?.let {
             it.inject(behaviors)
             planet = behaviors.providePlanetBehavior()
+            planet?.attachView(planetView)
         }
-
     }
 
-    private fun disposePrevBehaviors() {
-        component?.let {
-            planet.dispose()
-        }
+    private fun disposeLevelBehaviors() {
+        ring.dispose()
+    }
+
+    private fun disposeStageBehaviors() {
+        planet?.dispose()
     }
 }
+
+private fun <T> List<T>.copy() = ArrayList(this)
+
+

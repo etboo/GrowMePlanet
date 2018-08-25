@@ -51,7 +51,7 @@ abstract class BaseBehavior<V: BaseView, out M: GameObjectModel>(
         }
     }
 
-    fun dispose() {
+    open fun dispose() {
         detachView()
         model.observer = null
     }
