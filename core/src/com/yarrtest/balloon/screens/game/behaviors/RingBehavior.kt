@@ -36,6 +36,17 @@ class RingBehavior @Inject constructor(
         registerObstacle.invoke(this)
     }
 
+    override fun detachView() {
+        view?.hide()
+        super.detachView()
+
+    }
+
+    override fun attachView(view: Ring) {
+        super.attachView(view)
+        view.show()
+    }
+
     override fun collide(shape: Circle): CollideResult {
         val vertices = model.transformToVertices()
         val displace = Vector2()

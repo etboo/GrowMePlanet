@@ -18,16 +18,10 @@ sealed class GameObjectModel(
     var radius: Float = radius
         protected set(value) {
             field = value
-            observer?.sizeChanged(value * 2, value * 2)
+            observer?.radiusChanged(value)
         }
 
     var observer: ModelObserver? = null
-        set(value) {
-            field = value
-            value?.positionChanged(x, y)
-            value?.sizeChanged(radius * 2, radius * 2)
-        }
-
 }
 
 class PlanetModel(
@@ -52,7 +46,7 @@ sealed class ObstacleModel(
         y: Float,
         radius: Float,
         val score: Int
-): GameObjectModel(x, y, radius)
+) : GameObjectModel(x, y, radius)
 
 class RingModel(
         x: Float,

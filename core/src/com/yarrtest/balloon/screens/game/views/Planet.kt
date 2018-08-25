@@ -13,11 +13,20 @@ class Planet(
         texture: Texture
 ): Image(texture), BaseView {
 
+    override fun isShown() = parent != null
+
     override fun show() {
         layerHandler.addActorOnLayer(this, Layer.PLAYER_LEVEL)
     }
 
     override fun hide() {
         remove()
+    }
+
+    override fun resize(newWidth: Float, newHeight: Float) {
+        val scaleX = newWidth / width
+        val scaleY = newHeight / height
+
+        setScale(scaleX, scaleY)
     }
 }

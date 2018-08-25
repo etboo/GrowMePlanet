@@ -7,5 +7,5 @@ interface ModelObserver {
 
     fun positionChanged(x: Float, y: Float)
 
-    fun sizeChanged(width: Float, height: Float)
+    fun radiusChanged(newValue: Float)
 }

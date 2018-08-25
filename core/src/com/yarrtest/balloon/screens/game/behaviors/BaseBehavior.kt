@@ -11,14 +11,19 @@ import com.yarrtest.balloon.screens.game.views.BaseView
 private const val TAG = "com.yarrtest.ballon.base.BaseBehavior"
 
 abstract class BaseBehavior<V: BaseView, out M: GameObjectModel>(
-        protected val model: M
+        behaviorModel: M
 ): ModelObserver {
 
     protected var view: V? = null
 
-    open fun interceptPositionChanged(x: Float, y: Float): Boolean = false
+    protected val model by lazy {
+        behaviorModel.observer = this
+        behaviorModel
+    }
 
-    open fun interceptSizeChanged(width: Float, height: Float): Boolean = false
+    open fun validatePositionChanged(x: Float, y: Float): Boolean = true
+
+    open fun validateSizeChanged(value: Float): Boolean = true
 
     open fun act(delta: Float) {
         Gdx.app.log(TAG, "act $delta")
@@ -26,33 +31,37 @@ abstract class BaseBehavior<V: BaseView, out M: GameObjectModel>(
 
     open fun detachView() {
         Gdx.app.log(TAG, "stop")
-        Gdx.app.log(TAG, "use default behavior, removing view to stage")
-        view?.hide()
         this.view = null
     }
 
     open fun attachView(view: V) {
         Gdx.app.log(TAG, "start")
-        Gdx.app.log(TAG, "use default behavior, adding view to stage")
         this.view = view
-        model.observer = this
-        view.show()
+        setInitialViewProperties()
+
+        if(!view.isShown()) {
+            view.show()
+        }
     }
 
     override fun positionChanged(x: Float, y: Float) {
-        if(interceptPositionChanged(x, y).not()) {
+        if(validatePositionChanged(x, y)) {
             view?.setPosition(x, y)
         }
     }
 
-    override fun sizeChanged(width: Float, height: Float) {
-        if(interceptSizeChanged(width, height).not()) {
-            view?.setSize(width, height)
+    override fun radiusChanged(value: Float) {
+        if(validateSizeChanged(value)) {
+            view?.resize(value * 2, value * 2)
         }
     }
 
+    protected open fun setInitialViewProperties() {
+        view?.setPosition(model.x, model.y)
+        view?.resize(model.radius * 2, model.radius * 2)
+    }
+
     open fun dispose() {
-        detachView()
         model.observer = null
     }
 }

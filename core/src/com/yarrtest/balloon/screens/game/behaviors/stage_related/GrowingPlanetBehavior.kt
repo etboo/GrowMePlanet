@@ -1,10 +1,12 @@
 package com.yarrtest.balloon.screens.game.behaviors.stage_related
 
+import com.badlogic.gdx.Gdx
 import com.yarrtest.balloon.UseCase
 import com.yarrtest.balloon.screens.game.GLOBAL_TOUCHES_USE_CASE
 import com.yarrtest.balloon.screens.game.GROWTH_TOUCH_UP_USE_CASE
 import com.yarrtest.balloon.screens.game.ScreenTouchesListener
 import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.StageScope
 import com.yarrtest.balloon.screens.game.models.PlanetModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,6 +17,7 @@ import javax.inject.Named
 
 private const val GROWTH_SPEED = 10f
 
+@StageScope
 class GrowingPlanetBehavior @Inject constructor(
         model: PlanetModel,
         @Named(GLOBAL_TOUCHES_USE_CASE)
@@ -34,7 +37,13 @@ class GrowingPlanetBehavior @Inject constructor(
     override fun act(delta: Float) {
         if(active) {
             model.grow(delta * GROWTH_SPEED)
+            model.moveBy(0f, 0f)
         }
+    }
+
+    override fun validatePositionChanged(x: Float, y: Float): Boolean {
+        Gdx.app.log("@", "growing $x $y")
+        return super.validatePositionChanged(x, y)
     }
 
     override fun onTouchDown() {

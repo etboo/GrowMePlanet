@@ -16,6 +16,8 @@ class Ring(
         backTexture: Texture
 ) : BaseView {
 
+    override fun isShown() = frontImage.parent != null && backImage.parent != null
+
     private val frontImage = Image(frontTexture)
     private val backImage = Image(backTexture)
 
@@ -34,7 +36,7 @@ class Ring(
         backImage.setPosition(x, y)
     }
 
-    override fun setSize(width: Float, height: Float) {
+    override fun resize(width: Float, height: Float) {
         frontImage.setSize(width, height)
         backImage.setSize(width, height)
     }

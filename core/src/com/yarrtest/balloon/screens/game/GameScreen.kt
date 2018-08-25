@@ -39,7 +39,13 @@ class GameScreen(
     @Inject lateinit var controller: GameController
 
     private var isShown = false
-    private val layers = mutableMapOf<Layer, Group>()
+    private val layers by lazy(LazyThreadSafetyMode.NONE) {
+        mutableMapOf<Layer, Group>().also { map ->
+            Layer.values().forEach {
+                map[it] = Group()
+            }
+        }
+    }
 
     private val layerHandler = object : LayerHandler {
         override fun addActorOnLayer(actor: Actor, layer: Layer) {
@@ -97,10 +103,8 @@ class GameScreen(
     }
 
     private fun addLayerGroups() {
-        Layer.values().forEach {
-            layers[it] = Group().also {
-                stage?.addActor(it)
-            }
+        layers.values.forEach{
+            stage?.addActor(it)
         }
     }
 }

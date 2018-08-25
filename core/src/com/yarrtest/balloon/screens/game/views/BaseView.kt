@@ -11,5 +11,7 @@ interface BaseView {
 
     fun setPosition(x: Float, y: Float)
 
-    fun setSize(width: Float, height: Float)
+    fun resize(newWidth: Float, newHeight: Float)
+
+    fun isShown(): Boolean
 }

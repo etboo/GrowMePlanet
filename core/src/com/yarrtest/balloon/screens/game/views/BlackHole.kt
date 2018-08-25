@@ -13,12 +13,21 @@ class BlackHole(
         texture: Texture
 ): Image(texture), BaseView {
 
+    override fun isShown() = parent != null
+
     override fun show() {
         layerHandler.addActorOnLayer(this, Layer.BACKGROUND)
     }
 
     override fun hide() {
         remove()
+    }
+
+    override fun resize(newWidth: Float, newHeight: Float) {
+        val scaleX = newWidth / width
+        val scaleY = newHeight / height
+
+        setScale(scaleX, scaleY)
     }
 
 }

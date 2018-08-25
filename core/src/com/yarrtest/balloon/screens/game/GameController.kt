@@ -10,8 +10,8 @@ import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
 import com.yarrtest.balloon.screens.game.behaviors.RingBehavior
 import com.yarrtest.balloon.screens.game.behaviors.collider.Obstacle
 import com.yarrtest.balloon.screens.game.behaviors.stage_related.Stage
-import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.FloatingStageBehaviors
-import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.GrowingStageBehaviors
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.GameStageComponent
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.di.PlanetBehaviorProvider
 import com.yarrtest.balloon.screens.game.di.GameLevelComponent
 import com.yarrtest.balloon.screens.game.di.LevelScope
 import com.yarrtest.balloon.screens.game.models.ObstacleModel
@@ -50,7 +50,8 @@ class GameController(
     @Inject
     lateinit var ringView: Ring
 
-    private var component: GameLevelComponent? = null
+    private var levelComponent: GameLevelComponent? = null
+    private var stageComponent: GameStageComponent? = null
 
     private lateinit var stage: Stage
 
@@ -90,11 +91,11 @@ class GameController(
     fun loadLevel(gameScreen: GameScreen, index: Int) {
         disposeLevelBehaviors()
 
-        component = gameScreen.component?.plus(
+        levelComponent = gameScreen.component?.plus(
                 this,
                 levelManager.loadLevel(index)
         )
-        component?.inject(this)
+        levelComponent?.inject(this)
 
         switchStage(Stage.GROWING_STAGE)
     }
@@ -106,7 +107,7 @@ class GameController(
     @LevelScope
     @Provides
     @Named(GROWTH_TOUCH_UP_USE_CASE)
-    fun provideGrowthTouchUpUseCase() = {
+    fun provideGrowthTouchUpUseCase(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit> = {
         touchesListener = null
         switchStage(Stage.FLOATING_STAGE)
     }
@@ -114,26 +115,22 @@ class GameController(
     @LevelScope
     @Provides
     @Named(GLOBAL_TOUCHES_USE_CASE)
-    fun provideScreenTouchesUseCase(): UseCase<@JvmWildcard ScreenTouchesListener?, @JvmWildcard Unit>
-            = { touchesListener = it }
+    fun provideScreenTouchesUseCase(): UseCase<@JvmWildcard ScreenTouchesListener?, @JvmWildcard Unit> = { touchesListener = it }
 
     @LevelScope
     @Provides
     @Named(REGISTER_OBSTACLE_USE_CASE)
-    fun provideObstaclesRegistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
-            = { obstacles.add(it)}
+    fun provideObstaclesRegistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit> = { obstacles.add(it) }
 
     @LevelScope
     @Provides
     @Named(UNREGISTER_OBSTACLE_USE_CASE)
-    fun provideObstacleUnregistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
-            = { obstacles.remove(it) }
+    fun provideObstacleUnregistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit> = { obstacles.remove(it) }
 
     @LevelScope
     @Provides
     @Named(SCORED_USE_CASE)
-    fun provideScoredUseCase(): UseCase<@JvmWildcard ObstacleModel, @JvmWildcard Unit>
-            = { scoreManager.scored(it.score) }
+    fun provideScoredUseCase(): UseCase<@JvmWildcard ObstacleModel, @JvmWildcard Unit> = { scoreManager.scored(it.score) }
 
     @LevelScope
     @Provides
@@ -143,24 +140,24 @@ class GameController(
         disposeStageBehaviors()
 
         stage = newStage
-
-        val behaviors = when (newStage) {
-            Stage.GROWING_STAGE -> GrowingStageBehaviors()
-            Stage.FLOATING_STAGE -> FloatingStageBehaviors()
-        }
-
-        component?.let {
-            it.inject(behaviors)
-            planet = behaviors.providePlanetBehavior()
+        stageComponent = levelComponent?.stage()?.also {
+            val provider = PlanetBehaviorProvider(newStage)
+            it.inject(provider)
+            planet = provider.planetBehavior
             planet?.attachView(planetView)
         }
+
     }
 
     private fun disposeLevelBehaviors() {
-        ring.dispose()
+        levelComponent?.let {
+            ring.detachView()
+            ring.dispose()
+        }
     }
 
     private fun disposeStageBehaviors() {
+        planet?.detachView()
         planet?.dispose()
     }
 }
