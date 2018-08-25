@@ -13,7 +13,7 @@ interface GameScreenComponent {
     fun plus(
             useCases: GameController,
             models: LevelModel
-    ): GameSessionComponent
+    ): GameLevelComponent
 
     fun inject(screen: GameScreen)
 }

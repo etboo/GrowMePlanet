@@ -19,12 +19,12 @@ class Ring(
     private val frontImage = Image(frontTexture)
     private val backImage = Image(backTexture)
 
-    override fun attach() {
+    override fun show() {
         layerHandler.addActorOnLayer(frontImage, Layer.FOREGROUND)
         layerHandler.addActorOnLayer(backImage, Layer.BACKGROUND)
     }
 
-    override fun detach() {
+    override fun hide() {
         frontImage.remove()
         backImage.remove()
     }
@@ -34,8 +34,9 @@ class Ring(
         backImage.setPosition(x, y)
     }
 
-    override fun setSize(value: Float) {
-
+    override fun setSize(width: Float, height: Float) {
+        frontImage.setSize(width, height)
+        backImage.setSize(width, height)
     }
 
 }

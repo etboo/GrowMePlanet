@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Polyline
 import com.badlogic.gdx.math.Vector2
 import com.yarrtest.balloon.UseCase
 
-class BalloonMoveCheckUseCase(
+class PlanetMoveCheckUseCase(
         private val ringCollidersProvider: () -> Polyline
 ) : UseCase<Circle, Boolean> {
     override fun invoke(circle: Circle): Boolean {
@@ -20,7 +20,7 @@ class BalloonMoveCheckUseCase(
             )
 
             if (isIntersected) {
-                Gdx.app.log("@", "scored")
+                Gdx.app.log("@", "scored, x: ${circle.x} y: ${circle.y}")
                 return false
             }
         }

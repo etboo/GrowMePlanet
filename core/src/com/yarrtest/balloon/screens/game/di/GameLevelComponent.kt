@@ -2,11 +2,14 @@ package com.yarrtest.balloon.screens.game.di
 
 import com.yarrtest.balloon.managers.level.LevelModel
 import com.yarrtest.balloon.screens.game.GameController
+import com.yarrtest.balloon.screens.game.stages.StageRelatedBehaviors
 import dagger.Subcomponent
 
-@SessionScope
+@LevelScope
 @Subcomponent(modules = [GameController::class, LevelModel::class])
-interface GameSessionComponent {
+interface GameLevelComponent {
 
     fun inject(controller: GameController)
+
+    fun inject(stageRelatedBehaviors: StageRelatedBehaviors)
 }

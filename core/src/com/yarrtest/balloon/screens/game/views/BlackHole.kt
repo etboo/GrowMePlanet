@@ -13,17 +13,12 @@ class BlackHole(
         texture: Texture
 ): Image(texture), BaseView {
 
-    override fun attach() {
+    override fun show() {
         layerHandler.addActorOnLayer(this, Layer.BACKGROUND)
     }
 
-    override fun detach() {
+    override fun hide() {
         remove()
     }
-
-    override fun setSize(value: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
 }

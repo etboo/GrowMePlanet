@@ -6,10 +6,15 @@ import com.yarrtest.balloon.managers.ScoreManager
 import com.yarrtest.balloon.managers.level.LevelManager
 import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
 import com.yarrtest.balloon.screens.game.behaviors.RingBehavior
-import com.yarrtest.balloon.screens.game.di.GameSessionComponent
-import com.yarrtest.balloon.screens.game.di.SessionScope
-import com.yarrtest.balloon.screens.game.usecases.BalloonMoveCheckUseCase
-import com.yarrtest.balloon.screens.game.usecases.CollideDetectedUseCase
+import com.yarrtest.balloon.screens.game.di.GameLevelComponent
+import com.yarrtest.balloon.screens.game.di.LevelScope
+import com.yarrtest.balloon.screens.game.stages.FloatingStageBehaviors
+import com.yarrtest.balloon.screens.game.stages.GrowthStageBehaviors
+import com.yarrtest.balloon.screens.game.stages.Stage
+import com.yarrtest.balloon.screens.game.usecases.PlanetMoveCheckUseCase
+import com.yarrtest.balloon.screens.game.usecases.ScreenTouchesUseCase
+import com.yarrtest.balloon.screens.game.views.Planet
+import com.yarrtest.balloon.screens.game.views.Ring
 import dagger.Module
 import dagger.Provides
 import javax.inject.Inject
@@ -26,25 +31,34 @@ class GameController(
         private val levelManager: LevelManager
 ) : InputListener(), ScreenLifecycleListener {
 
-    @Inject lateinit var planet: PlanetBehavior
+    lateinit var planet: PlanetBehavior
 
-    @Inject lateinit var ring: RingBehavior
+    @Inject
+    lateinit var ring: RingBehavior
 
-    private var component: GameSessionComponent? = null
+    @Inject
+    lateinit var planetView: Planet
+    @Inject
+    lateinit var ringView: Ring
+
+    private var component: GameLevelComponent? = null
+
+    private lateinit var stage: Stage
 
     fun loadLevel(gameScreen: GameScreen, index: Int) {
-        stopPrevBehaviors()
+        disposePrevBehaviors()
 
         component = gameScreen.component?.plus(
                 this,
                 levelManager.loadLevel(index)
         )
         component?.inject(this)
+
+        switchStage(Stage.GROWTH_STAGE)
     }
 
     override fun onShow() {
-        planet.start()
-        ring.start()
+        planet.attachView(planetView)
     }
 
     override fun onPause() {
@@ -54,7 +68,7 @@ class GameController(
     }
 
     override fun onHide() {
-        planet.stop()
+        planet.detachView()
     }
 
     override fun onDispose() {
@@ -64,20 +78,31 @@ class GameController(
         planet.act(delta)
     }
 
-    @SessionScope
+    @LevelScope
     @Provides
-    fun provideBalloonModeCheckUseCase()
-            = BalloonMoveCheckUseCase { ring.collider }
+    fun provideScreenTouchesUseCase() = ScreenTouchesUseCase()
 
-    @SessionScope
+    @LevelScope
     @Provides
-    fun provideCollideDetectedUseCase()
-            = CollideDetectedUseCase(scoreManager)
+    fun provideBalloonModeCheckUseCase() = PlanetMoveCheckUseCase { ring.collider }
 
-    private fun stopPrevBehaviors() {
+    private fun switchStage(newStage: Stage) {
+        stage = newStage
+        val behaviors = when(stage) {
+            Stage.GROWTH_STAGE -> GrowthStageBehaviors()
+            Stage.FLOATING_STAGE -> FloatingStageBehaviors()
+        }
+
         component?.let {
-            planet.stop()
-            ring.stop()
+            it.inject(behaviors)
+            planet = behaviors.providePlanetBehavior()
+        }
+
+    }
+
+    private fun disposePrevBehaviors() {
+        component?.let {
+            planet.dispose()
         }
     }
 }

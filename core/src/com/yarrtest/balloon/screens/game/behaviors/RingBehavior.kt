@@ -1,29 +1,25 @@
 package com.yarrtest.balloon.screens.game.behaviors
 
 import com.badlogic.gdx.math.Polyline
-import com.yarrtest.balloon.managers.level.RING_MODEL
-import com.yarrtest.balloon.screens.game.models.GameObjectModel
+import com.yarrtest.balloon.screens.game.models.RingModel
 import com.yarrtest.balloon.screens.game.views.Ring
 import javax.inject.Inject
-import javax.inject.Named
 
-private fun GameObjectModel.transformToVertices()
+private fun RingModel.transformToVertices()
         = floatArrayOf( this.x - this.radius, this.y, this.x + this.radius, this.y)
 
 class RingBehavior @Inject constructor(
-        @Named(RING_MODEL) model: GameObjectModel,
-        view: Ring
-) : BaseBehavior<Polyline, Ring>(
-        Polyline(model.transformToVertices()),
-        view
+        model: RingModel
+) : ColliderBehavior<Ring, RingModel>(
+        model
 ) {
-    override fun updateViewPosition(collider: Polyline) {
-        val x = (collider.vertices[0] + collider.vertices[2]) / 2
-        val y =  (collider.vertices[1] + collider.vertices[3]) / 2
 
-        view.setPosition(x, y)
+    override val collider = Polyline(model.transformToVertices())
+
+    override fun interceptPositionChanged(x: Float, y: Float): Boolean {
+        //TODO: change collider
+        return super.interceptPositionChanged(x, y)
     }
-
 
 }
 

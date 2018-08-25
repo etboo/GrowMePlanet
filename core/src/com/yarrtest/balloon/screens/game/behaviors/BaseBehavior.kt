@@ -1,7 +1,8 @@
 package com.yarrtest.balloon.screens.game.behaviors
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Shape2D
+import com.yarrtest.balloon.screens.game.models.GameObjectModel
+import com.yarrtest.balloon.screens.game.models.ModelObserver
 import com.yarrtest.balloon.screens.game.views.BaseView
 
 /**
@@ -9,31 +10,49 @@ import com.yarrtest.balloon.screens.game.views.BaseView
  */
 private const val TAG = "com.yarrtest.ballon.base.BaseBehavior"
 
-abstract class BaseBehavior<M: Shape2D, out V: BaseView>(
-        val collider: M,
-        protected val view: V
-) {
+abstract class BaseBehavior<V: BaseView, out M: GameObjectModel>(
+        protected val model: M
+): ModelObserver {
 
-    init {
-        updateViewPosition(collider)
-    }
+    protected var view: V? = null
 
-    abstract protected fun updateViewPosition(collider: M)
+    open fun interceptPositionChanged(x: Float, y: Float): Boolean = false
+
+    open fun interceptSizeChanged(width: Float, height: Float): Boolean = false
 
     open fun act(delta: Float) {
         Gdx.app.log(TAG, "act $delta")
     }
 
-    open fun stop() {
+    open fun detachView() {
         Gdx.app.log(TAG, "stop")
         Gdx.app.log(TAG, "use default behavior, removing view to stage")
-        view.detach()
+        view?.hide()
+        this.view = null
     }
 
-    open fun start() {
+    open fun attachView(view: V) {
         Gdx.app.log(TAG, "start")
         Gdx.app.log(TAG, "use default behavior, adding view to stage")
-        view.attach()
+        this.view = view
+        model.observer = this
+        view.show()
     }
 
+    override fun positionChanged(x: Float, y: Float) {
+        if(interceptPositionChanged(x, y).not()) {
+            view?.setPosition(x, y)
+        }
+    }
+
+    override fun sizeChanged(width: Float, height: Float) {
+        if(interceptSizeChanged(width, height).not()) {
+            view?.setSize(width, height)
+        }
+    }
+
+    fun dispose() {
+        detachView()
+        model.observer = null
+    }
 }

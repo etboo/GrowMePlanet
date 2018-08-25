@@ -13,15 +13,11 @@ class Planet(
         texture: Texture
 ): Image(texture), BaseView {
 
-    override fun setSize(value: Float) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun attach() {
+    override fun show() {
         layerHandler.addActorOnLayer(this, Layer.PLAYER_LEVEL)
     }
 
-    override fun detach() {
+    override fun hide() {
         remove()
     }
 }

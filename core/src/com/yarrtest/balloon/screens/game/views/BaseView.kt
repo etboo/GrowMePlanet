@@ -5,11 +5,11 @@ package com.yarrtest.balloon.screens.game.views
  */
 interface BaseView {
 
-    fun attach()
+    fun show()
 
-    fun detach()
+    fun hide()
 
     fun setPosition(x: Float, y: Float)
 
-    fun setSize(value: Float)
+    fun setSize(width: Float, height: Float)
 }
