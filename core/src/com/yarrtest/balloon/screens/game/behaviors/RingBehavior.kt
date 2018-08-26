@@ -5,19 +5,13 @@ import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Vector2
 import com.yarrtest.balloon.UseCase
 import com.yarrtest.balloon.screens.game.REGISTER_OBSTACLE_USE_CASE
-import com.yarrtest.balloon.screens.game.SCORED_USE_CASE
 import com.yarrtest.balloon.screens.game.UNREGISTER_OBSTACLE_USE_CASE
-import com.yarrtest.balloon.screens.game.behaviors.collider.CollideResult
-import com.yarrtest.balloon.screens.game.behaviors.collider.Obstacle
+import com.yarrtest.balloon.screens.game.behaviors.collider.*
 import com.yarrtest.balloon.screens.game.di.LevelScope
-import com.yarrtest.balloon.screens.game.models.ObstacleModel
 import com.yarrtest.balloon.screens.game.models.RingModel
 import com.yarrtest.balloon.screens.game.views.Ring
 import javax.inject.Inject
 import javax.inject.Named
-
-private fun RingModel.transformToVertices()
-        = floatArrayOf( this.x - this.radius, this.y, this.x + this.radius, this.y)
 
 @LevelScope
 class RingBehavior @Inject constructor(
@@ -25,9 +19,7 @@ class RingBehavior @Inject constructor(
         @Named (REGISTER_OBSTACLE_USE_CASE)
         registerObstacle: UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>,
         @Named(UNREGISTER_OBSTACLE_USE_CASE)
-        private val unregisterObstacle: UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>,
-        @Named(SCORED_USE_CASE)
-        private val scoredUseCase: UseCase<@JvmWildcard ObstacleModel, @JvmWildcard Unit>
+        private val unregisterObstacle: UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
 ) : BaseBehavior<Ring, RingModel>(
         model
 ), Obstacle {
@@ -47,7 +39,7 @@ class RingBehavior @Inject constructor(
         view.show()
     }
 
-    override fun collide(shape: Circle): CollideResult {
+    override fun collide(shape: Circle): CollisionResult {
         val vertices = model.transformToVertices()
         val displace = Vector2()
 
@@ -59,16 +51,14 @@ class RingBehavior @Inject constructor(
                 displace
         )
 
-        return if(result == Float.POSITIVE_INFINITY) {
-            CollideResult.NONE
-        } else if(displace.x >= model.radius) {
-            CollideResult.COLLIDED
-        } else if(shape.y >= model.y) {
-            unregisterObstacle.invoke(this)
-            scoredUseCase.invoke(model)
-            CollideResult.PASSED
-        } else {
-            CollideResult.NONE
+        return when {
+            result == Float.POSITIVE_INFINITY -> None()
+            displace.x >= model.radius -> Collision(model)
+            shape.y >= model.y -> {
+                unregisterObstacle.invoke(this)
+                Passed(model)
+            }
+            else -> None()
         }
     }
 
@@ -78,6 +68,9 @@ class RingBehavior @Inject constructor(
 
     }
 }
+
+private fun RingModel.transformToVertices()
+        = floatArrayOf( this.x - this.radius, this.y, this.x + this.radius, this.y)
 
 
 

@@ -3,7 +3,15 @@ package com.yarrtest.balloon.screens.game.behaviors.stage_related
 /**
  * Created by etb on 25.08.2018.
  */
-enum class Stage {
-    GROWING_STAGE,
-    FLOATING_STAGE
-}
+
+sealed class Stage
+
+class GrowingStage: Stage()
+
+class FloatingStage(): Stage()
+
+class LevelFailed(
+        val failedReason: FailedReason
+): Stage()
+
+class LevelPassed: Stage()

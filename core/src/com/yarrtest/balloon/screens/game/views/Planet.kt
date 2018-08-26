@@ -1,6 +1,7 @@
 package com.yarrtest.balloon.screens.game.views
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.yarrtest.balloon.screens.game.Layer
 import com.yarrtest.balloon.screens.game.LayerHandler
@@ -28,5 +29,13 @@ class Planet(
         val scaleY = newHeight / height
 
         setScale(scaleX, scaleY)
+    }
+
+    fun startFallingAnimation() {
+
+    }
+
+    fun startAbsorbAnimation(center: Vector2) {
+
     }
 }

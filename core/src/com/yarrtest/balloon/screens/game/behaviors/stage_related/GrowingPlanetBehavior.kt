@@ -1,6 +1,5 @@
 package com.yarrtest.balloon.screens.game.behaviors.stage_related
 
-import com.badlogic.gdx.Gdx
 import com.yarrtest.balloon.UseCase
 import com.yarrtest.balloon.screens.game.GLOBAL_TOUCHES_USE_CASE
 import com.yarrtest.balloon.screens.game.GROWTH_TOUCH_UP_USE_CASE
@@ -41,11 +40,6 @@ class GrowingPlanetBehavior @Inject constructor(
         }
     }
 
-    override fun validatePositionChanged(x: Float, y: Float): Boolean {
-        Gdx.app.log("@", "growing $x $y")
-        return super.validatePositionChanged(x, y)
-    }
-
     override fun onTouchDown() {
         active = true
     }
@@ -57,7 +51,6 @@ class GrowingPlanetBehavior @Inject constructor(
 
     override fun dispose() {
         super.dispose()
-        //TODO:nu takoe sebe
         globalTouches.invoke(null)
     }
 }

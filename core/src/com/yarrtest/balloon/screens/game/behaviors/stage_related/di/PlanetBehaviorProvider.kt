@@ -1,8 +1,6 @@
 package com.yarrtest.balloon.screens.game.behaviors.stage_related.di
 
-import com.yarrtest.balloon.screens.game.behaviors.stage_related.FloatingPlanetBehavior
-import com.yarrtest.balloon.screens.game.behaviors.stage_related.GrowingPlanetBehavior
-import com.yarrtest.balloon.screens.game.behaviors.stage_related.Stage
+import com.yarrtest.balloon.screens.game.behaviors.stage_related.*
 import javax.inject.Inject
 
 /**
@@ -17,10 +15,15 @@ class PlanetBehaviorProvider(val stage: Stage) {
     @Inject
     protected lateinit var growingImpl: dagger.Lazy<GrowingPlanetBehavior>
 
+    @Inject
+    protected lateinit var failedFactoryImpl: FailedPlanetBehaviorFactory
+
     val planetBehavior by lazy {
         when(stage) {
-            Stage.GROWING_STAGE -> growingImpl.get()
-            Stage.FLOATING_STAGE -> floatingImpl.get()
+            is GrowingStage -> growingImpl.get()
+            is FloatingStage -> floatingImpl.get()
+            is LevelFailed ->  failedFactoryImpl.createBehavior(stage.failedReason)
+            else -> throw IllegalStateException("can't handle $stage yet")
         }
     }
 
