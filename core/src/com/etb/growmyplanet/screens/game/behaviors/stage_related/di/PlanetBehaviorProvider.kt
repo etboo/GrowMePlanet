@@ -18,12 +18,15 @@ class PlanetBehaviorProvider(val stage: Stage) {
     @Inject
     protected lateinit var failedFactoryImpl: FailedPlanetBehaviorFactory
 
+    @Inject
+    protected lateinit var passedImpl: dagger.Lazy<PassedPlanetBehavior>
+
     val planetBehavior by lazy {
         when(stage) {
             is GrowingStage -> growingImpl.get()
             is FloatingStage -> floatingImpl.get()
             is LevelFailed ->  failedFactoryImpl.createBehavior(stage.failedReason)
-            else -> throw IllegalStateException("can't handle $stage yet")
+            is LevelPassed -> passedImpl.get()
         }
     }
 

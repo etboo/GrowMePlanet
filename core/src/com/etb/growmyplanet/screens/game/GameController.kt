@@ -1,6 +1,6 @@
 package com.etb.growmyplanet.screens.game
 
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.etb.growmyplanet.UseCase
@@ -20,6 +20,7 @@ import com.etb.growmyplanet.screens.game.models.BlackHoleModel
 import com.etb.growmyplanet.screens.game.models.ObstacleModel
 import com.etb.growmyplanet.screens.game.models.RingModel
 import com.etb.growmyplanet.screens.game.usecases.PlanetMoveCheckUseCase
+import com.etb.growmyplanet.screens.game.usecases.SwapLevelsUseCase
 import com.etb.growmyplanet.screens.game.views.BlackHole
 import com.etb.growmyplanet.screens.game.views.Planet
 import com.etb.growmyplanet.screens.game.views.Ring
@@ -38,11 +39,13 @@ const val GROWTH_TOUCH_UP_USE_CASE = "GrowthTouchUpUseCase"
 const val SCORED_USE_CASE = "ScoredUseCase"
 const val COLLISION_USE_CASE = "CollisionUseCase"
 const val FAILED_ANIMATION_FINISHED_USE_CASE = "FailedAnimationFinished"
+const val PASSED_ANIMATION_FINISHED_USE_CASE = "PassedAnimationFinished"
 
 @Module
 class GameController(
         private val scoreManager: ScoreManager,
-        private val levelManager: LevelManager
+        private val levelManager: LevelManager,
+        private val swapLevelsUseCase: SwapLevelsUseCase
 ) : InputListener(), ScreenLifecycleListener {
 
     //Behaviors
@@ -164,7 +167,7 @@ class GameController(
     fun provideCollisionAction(): UseCase<@JvmWildcard ObstacleModel, @JvmWildcard Unit>
             = {
         val failedReason = when(it) {
-            is BlackHoleModel -> Absorption(Vector2(it.x, it.y))
+            is BlackHoleModel -> Absorption(Circle(it.x, it.y, it.radius))
             is RingModel -> Collision()
         }
 
@@ -177,6 +180,14 @@ class GameController(
     fun provideFailedAnimationListener(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit>
      = {
         //TODO: switch stage to level_finished
+    }
+
+    @LevelScope
+    @Provides
+    @Named(PASSED_ANIMATION_FINISHED_USE_CASE)
+    fun providePassedAnimationListener(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit>
+            = {
+            switchStage(LevelPassed())
     }
 
     @LevelScope

@@ -1,12 +1,14 @@
 package com.etb.growmyplanet.screens.game.views
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.etb.growmyplanet.screens.game.Layer
 import com.etb.growmyplanet.screens.game.LayerHandler
+import com.etb.growmyplanet.screens.game.views.animation.HelixAnimation
 
 /**
  * Created by etb on 22.08.2018.
@@ -39,11 +41,16 @@ class Planet(
         setScale(scaleKoef)
     }
 
-    fun startFallingAnimation() {
-        addAction(Actions.moveBy(0f, -1000f, 1f))
+    fun startFallingAnimation(listener: AnimationListener) {
+        val actions = SequenceAction(
+                Actions.moveBy(0f, -1000f, 1f),
+                Actions.run { listener.onAnimationFinished() }
+        )
+        addAction(actions)
     }
 
-    fun startAbsorbAnimation(center: Vector2) {
-
+    fun startAbsorbAnimation(target: Circle, listener: AnimationListener) {
+        val animation = HelixAnimation(target, 2f)
+        addAction(animation.createAction())
     }
 }

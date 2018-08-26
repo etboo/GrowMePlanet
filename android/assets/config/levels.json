@@ -1,5 +1,4 @@
 {
-
   "levels": [
     {
       "planet": {
@@ -15,8 +14,8 @@
       },
       "black_hole": {
         "x": 200,
-        "y": 700,
-        "radius": 60,
+        "y": 900,
+        "radius": 100,
         "score": 10
       }
     },

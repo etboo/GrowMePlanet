@@ -12,6 +12,7 @@ import com.etb.growmyplanet.base.BaseScreen
 import com.etb.growmyplanet.screens.di.ScreenScope
 import com.etb.growmyplanet.screens.game.di.ControllersProvider
 import com.etb.growmyplanet.screens.game.di.GameScreenComponent
+import com.etb.growmyplanet.screens.game.usecases.SwapLevelsUseCase
 import com.etb.growmyplanet.screens.game.views.BlackHole
 import com.etb.growmyplanet.screens.game.views.Planet
 import com.etb.growmyplanet.screens.game.views.Ring
@@ -22,9 +23,6 @@ import javax.inject.Inject
 /**
  * Created by etb on 21.08.2018.
  */
-
-private const val TAG = "com.etb.growmyplanet.screens.game.GameScreen"
-
 @Module
 class GameScreen(
         game: GrowMyPlanetGame,
@@ -110,9 +108,18 @@ class GameScreen(
         return Ring(layerHandler, texture, texture)
     }
 
+    @ScreenScope
+    @Provides
+    fun provideSwapLevelsUseCase(): SwapLevelsUseCase {
+        return SwapLevelsUseCase(layers.values)
+    }
+
     private fun addLayerGroups() {
         layers.values.forEach{
             stage?.addActor(it)
         }
     }
+
 }
+
+private const val TAG = "com.etb.growmyplanet.screens.game.GameScreen"
