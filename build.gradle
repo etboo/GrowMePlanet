@@ -32,6 +32,7 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
         daggerVersion = '2.11'
+        gsonVersion = '2.8.5'
     }
 
     repositories {

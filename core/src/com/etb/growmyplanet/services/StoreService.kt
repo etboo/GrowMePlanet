@@ -8,4 +8,10 @@ interface StoreService {
     fun putString(key: String, value: String)
 
     fun getString(key: String, defaultValue: String): String
+
+    fun putInt(key: String, value: Int)
+
+    fun getInt(key: String, defaultValue: Int): Int
+
+
 }

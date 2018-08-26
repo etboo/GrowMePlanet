@@ -1,0 +1,81 @@
+{
+
+  "levels": [
+    {
+      "planet": {
+        "x": 200,
+        "y": 200,
+        "radius": 30
+      },
+      "ring": {
+        "x": 200,
+        "y": 500,
+        "radius": 150,
+        "score": 20
+      },
+      "black_hole": {
+        "x": 200,
+        "y": 700,
+        "radius": 60,
+        "score": 10
+      }
+    },
+    {
+      "planet": {
+        "x": 200,
+        "y": 200,
+        "radius": 30
+      },
+      "ring": {
+        "x": 200,
+        "y": 500,
+        "radius": 150,
+        "score": 20
+      },
+      "black_hole": {
+        "x": 200,
+        "y": 700,
+        "radius": 60,
+        "score": 10
+      }
+    },
+    {
+      "planet": {
+        "x": 200,
+        "y": 200,
+        "radius": 30
+      },
+      "ring": {
+        "x": 200,
+        "y": 500,
+        "radius": 150,
+        "score": 20
+      },
+      "black_hole": {
+        "x": 200,
+        "y": 700,
+        "radius": 60,
+        "score": 10
+      }
+    },
+    {
+      "planet": {
+        "x": 200,
+        "y": 200,
+        "radius": 30
+      },
+      "ring": {
+        "x": 200,
+        "y": 500,
+        "radius": 150,
+        "score": 20
+      },
+      "black_hole": {
+        "x": 200,
+        "y": 700,
+        "radius": 60,
+        "score": 10
+      }
+    }
+  ]
+}

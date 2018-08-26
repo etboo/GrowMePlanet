@@ -24,8 +24,12 @@ repositories {
 }
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "com.google.dagger:dagger:${daggerVersion}"
-    kapt "com.google.dagger:dagger-compiler:${daggerVersion}"
+    //dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    //gson
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
 }
 compileKotlin {
     kotlinOptions {

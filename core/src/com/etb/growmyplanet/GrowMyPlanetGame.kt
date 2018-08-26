@@ -7,6 +7,7 @@ import com.etb.growmyplanet.di.GameComponent
 import com.etb.growmyplanet.di.Managers
 import com.etb.growmyplanet.screens.game.GameScreen
 import com.etb.growmyplanet.services.StoreService
+import com.google.gson.Gson
 
 /**
  * Created by etb on 21.08.2018.
@@ -34,6 +35,7 @@ class GrowMyPlanetGame(
         component = DaggerGameComponent.builder()
                 .game(this)
                 .managers(Managers())
+                .gson(Gson())
                 .storeService(store)
                 .build()
     }

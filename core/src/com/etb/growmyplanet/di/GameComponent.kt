@@ -5,6 +5,7 @@ import com.etb.growmyplanet.screens.game.GameScreen
 import com.etb.growmyplanet.screens.game.di.ControllersProvider
 import com.etb.growmyplanet.screens.game.di.GameScreenComponent
 import com.etb.growmyplanet.services.StoreService
+import com.google.gson.Gson
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -24,6 +25,9 @@ interface GameComponent {
 
         @BindsInstance
         fun managers(manager: Managers): Builder
+
+        @BindsInstance
+        fun gson(instance: Gson): Builder
 
         fun build(): GameComponent
     }
