@@ -21,7 +21,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.yarrtest.planet"
+        applicationId "com.etb.growmyplanet"
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 1
