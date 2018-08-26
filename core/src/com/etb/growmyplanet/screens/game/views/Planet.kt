@@ -51,6 +51,6 @@ class Planet(
 
     fun startAbsorbAnimation(target: Circle, listener: AnimationListener) {
         val animation = HelixAnimation(target, 2f)
-        addAction(animation.createAction())
+        addAction(animation.createAction(listener))
     }
 }

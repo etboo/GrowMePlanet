@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Action
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction
+import com.etb.growmyplanet.screens.game.views.AnimationListener
 
 /**
  * Created by etb on 26.08.2018.
@@ -17,14 +18,14 @@ class HelixAnimation(
         private val circlePart: Float = 0.66f
 ) {
 
-    fun createAction(): Action {
+    fun createAction(completion: AnimationListener): Action {
 
         val spinVelocity = (2 * MathUtils.PI * circle.radius * circlePart) / durationSec
         val circleCenter = Vector2(circle.x, circle.y)
         //TODO: change this stub to real centerVelocity calculation
         val centeringVelocity = circle.radius / durationSec
 
-        return ParallelAction(
+        val parallelAction = ParallelAction(
                 CenteringAnimation(
                         circleCenter,
                         centeringVelocity,
@@ -36,6 +37,11 @@ class HelixAnimation(
                         durationSec
                 ),
                 Actions.sizeTo(0f, 0f, durationSec)
+        )
+
+        return Actions.sequence(
+                parallelAction,
+                Actions.run { completion.onAnimationFinished() }
         )
     }
 
@@ -57,7 +63,7 @@ class HelixAnimation(
             )
 
             elapsedTime += delta
-            return elapsedTime >= durationSec * 1000
+            return elapsedTime >= durationSec
         }
 
     }
@@ -71,8 +77,8 @@ class HelixAnimation(
         private var elapsedTime = 0f
 
         override fun act(delta: Float): Boolean {
-            val radiasAngle = getAngleFromActorCenterToCicleCenter(actor, center)
-            val vectorAngle = radiasAngle + MathUtils.degreesToRadians * 90
+            val radiansAngle = getAngleFromActorCenterToCicleCenter(actor, center)
+            val vectorAngle = radiansAngle + MathUtils.degreesToRadians * 90
 
             actor.setPosition(
                     actor.x + delta * velocity * MathUtils.cos(vectorAngle),
@@ -80,7 +86,7 @@ class HelixAnimation(
             )
 
             elapsedTime += delta
-            return elapsedTime >= durationSec * 1000
+            return elapsedTime >= durationSec
         }
     }
 }

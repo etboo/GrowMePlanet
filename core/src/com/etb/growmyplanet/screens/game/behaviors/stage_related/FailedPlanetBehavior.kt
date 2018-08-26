@@ -1,5 +1,6 @@
 package com.etb.growmyplanet.screens.game.behaviors.stage_related
 
+import com.badlogic.gdx.Gdx
 import com.etb.growmyplanet.UseCase
 import com.etb.growmyplanet.screens.game.FAILED_ANIMATION_FINISHED_USE_CASE
 import com.etb.growmyplanet.screens.game.behaviors.PlanetBehavior
@@ -48,6 +49,7 @@ class FailedPlanetBehavior(
     private fun getListener(): AnimationListener {
         return object : AnimationListener {
             override fun onAnimationFinished() {
+                Gdx.app.log("@", "onAnimationFinished")
                 animationFinishedListener.invoke(Unit)
             }
 
