@@ -43,14 +43,21 @@ class Planet(
 
     fun startFallingAnimation(listener: AnimationListener) {
         val actions = SequenceAction(
-                Actions.moveBy(0f, -1000f, 1f),
+                Actions.moveBy(0f, - FALLING_DISTANCE, ANIMATION_DURATION),
                 Actions.run { listener.onAnimationFinished() }
         )
         addAction(actions)
     }
 
     fun startAbsorbAnimation(target: Circle, listener: AnimationListener) {
-        val animation = HelixAnimation(target, 2f)
+        val animation = HelixAnimation(target, ANIMATION_DURATION)
         addAction(animation.createAction(listener))
     }
+
+    fun startPassedAnimation(listener: AnimationListener) {
+
+    }
 }
+
+private const val FALLING_DISTANCE = 1000f
+private const val ANIMATION_DURATION = 0.7f

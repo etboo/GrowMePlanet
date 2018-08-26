@@ -11,9 +11,9 @@ import com.etb.growmyplanet.screens.game.behaviors.BlackHoleBehavior
 import com.etb.growmyplanet.screens.game.behaviors.PlanetBehavior
 import com.etb.growmyplanet.screens.game.behaviors.RingBehavior
 import com.etb.growmyplanet.screens.game.behaviors.collider.Obstacle
-import com.etb.growmyplanet.screens.game.behaviors.stage_related.*
-import com.etb.growmyplanet.screens.game.behaviors.stage_related.di.GameStageComponent
-import com.etb.growmyplanet.screens.game.behaviors.stage_related.di.PlanetBehaviorProvider
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.*
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.GamePhaseComponent
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.PlanetBehaviorProvider
 import com.etb.growmyplanet.screens.game.di.GameLevelComponent
 import com.etb.growmyplanet.screens.game.di.LevelScope
 import com.etb.growmyplanet.screens.game.models.BlackHoleModel
@@ -66,9 +66,9 @@ class GameController(
     lateinit var blackHoleView: BlackHole
 
     private var levelComponent: GameLevelComponent? = null
-    private var stageComponent: GameStageComponent? = null
+    private var stageComponent: GamePhaseComponent? = null
 
-    private lateinit var stage: Stage
+    private lateinit var stage: Phase
 
     private val obstacles = mutableListOf<Obstacle>()
     private var touchesListener: ScreenTouchesListener? = null
@@ -114,7 +114,7 @@ class GameController(
         )
         levelComponent?.inject(this)
 
-        switchStageImpl(GrowingStage())
+        switchStageImpl(GrowingPhase())
 
         ring.attachView(ringView)
         blackHole.attachView(blackHoleView)
@@ -134,7 +134,7 @@ class GameController(
     @Named(GROWTH_TOUCH_UP_USE_CASE)
     fun provideGrowthTouchAction(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit> = {
         touchesListener = null
-        switchStage(FloatingStage())
+        switchStage(FloatingPhase())
     }
 
     @LevelScope
@@ -187,7 +187,9 @@ class GameController(
     @Named(PASSED_ANIMATION_FINISHED_USE_CASE)
     fun providePassedAnimationListener(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit>
             = {
-            switchStage(LevelPassed())
+//            swapLevelsUseCase.invoke()
+//        loadLevel()
+
     }
 
     @LevelScope
@@ -201,11 +203,11 @@ class GameController(
             collisionAction = collided
     )
 
-    private fun switchStage(newStage: Stage) {
+    private fun switchStage(newStage: Phase) {
         controllerTask = Runnable { switchStageImpl(newStage) }
     }
 
-    private fun switchStageImpl(newStage: Stage) {
+    private fun switchStageImpl(newStage: Phase) {
         disposeStageBehaviors()
 
         stage = newStage

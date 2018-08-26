@@ -1,10 +1,10 @@
-package com.etb.growmyplanet.screens.game.behaviors.stage_related
+package com.etb.growmyplanet.screens.game.behaviors.phase_related
 
 import com.badlogic.gdx.Gdx
 import com.etb.growmyplanet.UseCase
 import com.etb.growmyplanet.screens.game.FAILED_ANIMATION_FINISHED_USE_CASE
 import com.etb.growmyplanet.screens.game.behaviors.PlanetBehavior
-import com.etb.growmyplanet.screens.game.behaviors.stage_related.di.StageScope
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.GamePhaseScope
 import com.etb.growmyplanet.screens.game.models.PlanetModel
 import com.etb.growmyplanet.screens.game.views.AnimationListener
 import com.etb.growmyplanet.screens.game.views.Planet
@@ -14,7 +14,7 @@ import javax.inject.Named
 /**
  * Created by etb on 26.08.2018.
  */
-@StageScope
+@GamePhaseScope
 class FailedPlanetBehaviorFactory @Inject constructor(
         private val model: PlanetModel,
         @Named(FAILED_ANIMATION_FINISHED_USE_CASE)

@@ -31,7 +31,7 @@ class RingBehavior @Inject constructor(
             distanceFromEdgeToCenter < target.radius -> Collision(model)
             model.y > target.y -> None()
             else -> {
-                if(model.y == target.y) {
+                if(model.y <= target.y) {
                     unregisterObstacle.invoke(this)
                     Passed(model)
                 } else {

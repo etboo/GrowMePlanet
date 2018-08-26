@@ -22,13 +22,10 @@ class HelixAnimation(
 
         val spinVelocity = (2 * MathUtils.PI * circle.radius * circlePart) / durationSec
         val circleCenter = Vector2(circle.x, circle.y)
-        //TODO: change this stub to real centerVelocity calculation
-        val centeringVelocity = circle.radius / durationSec
 
         val parallelAction = ParallelAction(
                 CenteringAnimation(
-                        circleCenter,
-                        centeringVelocity,
+                        circle,
                         durationSec
                 ),
                 SpinAnimation(
@@ -46,26 +43,33 @@ class HelixAnimation(
     }
 
     private class CenteringAnimation(
-            private val center: Vector2,
-            private val velocity: Float,
+            private val circle: Circle,
             private val durationSec: Float
     ) : Action() {
 
         private var elapsedTime = 0f
+        private var velocity: Float = 0f
+
+        override fun setActor(actor: Actor?) {
+            super.setActor(actor)
+            if(actor != null) {
+
+                velocity = (circle.radius - actor.width / 2) /
+                        durationSec
+            }
+        }
 
         override fun act(delta: Float): Boolean {
-
-            val radiansAngle = getAngleFromActorCenterToCicleCenter(actor, center)
+            val radiansAngle = getAngleFromActorCenterToCircleCenter(actor, circle.center)
 
             actor.setPosition(
-                    actor.x - delta * velocity * MathUtils.cos(radiansAngle),
+                    actor.x + delta * velocity * MathUtils.cos(radiansAngle),
                     actor.y - delta * velocity * MathUtils.sin(radiansAngle)
             )
 
             elapsedTime += delta
             return elapsedTime >= durationSec
         }
-
     }
 
     private class SpinAnimation(
@@ -77,7 +81,7 @@ class HelixAnimation(
         private var elapsedTime = 0f
 
         override fun act(delta: Float): Boolean {
-            val radiansAngle = getAngleFromActorCenterToCicleCenter(actor, center)
+            val radiansAngle = getAngleFromActorCenterToCircleCenter(actor, center)
             val vectorAngle = radiansAngle + MathUtils.degreesToRadians * 90
 
             actor.setPosition(
@@ -91,7 +95,10 @@ class HelixAnimation(
     }
 }
 
-private fun getAngleFromActorCenterToCicleCenter(
+private val Circle.center: Vector2
+    get() = Vector2(x, y)
+
+private fun getAngleFromActorCenterToCircleCenter(
         actor: Actor,
         circleCenter: Vector2
 ): Float {

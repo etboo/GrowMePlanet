@@ -1,8 +1,8 @@
-package com.etb.growmyplanet.screens.game.behaviors.stage_related
+package com.etb.growmyplanet.screens.game.behaviors.phase_related
 
 import com.badlogic.gdx.math.Circle
 import com.etb.growmyplanet.screens.game.behaviors.PlanetBehavior
-import com.etb.growmyplanet.screens.game.behaviors.stage_related.di.StageScope
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.GamePhaseScope
 import com.etb.growmyplanet.screens.game.models.PlanetModel
 import com.etb.growmyplanet.screens.game.usecases.PlanetMoveCheckUseCase
 import com.etb.growmyplanet.screens.game.views.Planet
@@ -12,9 +12,9 @@ import javax.inject.Inject
  * Created by etb on 22.08.2018.
  */
 
-private const val VELOCITY = 70f
+private const val VELOCITY = 270f
 
-@StageScope
+@GamePhaseScope
 class FloatingPlanetBehavior @Inject constructor (
         model: PlanetModel,
         private val moveValidator: PlanetMoveCheckUseCase

@@ -1,4 +1,4 @@
-package com.etb.growmyplanet.screens.game.behaviors.stage_related
+package com.etb.growmyplanet.screens.game.behaviors.phase_related
 
 import com.badlogic.gdx.math.Circle
 
