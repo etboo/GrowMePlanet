@@ -7,5 +7,5 @@ import com.badlogic.gdx.math.Circle
  */
 interface Obstacle {
 
-    fun collide(shape: Circle): CollisionResult
+    fun collide(target: Circle): CollisionResult
 }

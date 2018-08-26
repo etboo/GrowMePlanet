@@ -1,5 +1,6 @@
 package com.yarrtest.balloon.screens.game.usecases
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Circle
 import com.yarrtest.balloon.UseCase
 import com.yarrtest.balloon.screens.game.behaviors.collider.Collision
@@ -17,10 +18,12 @@ class PlanetMoveCheckUseCase(
             val result = it.collide(circle)
             when(result) {
                 is Collision -> {
+                    Gdx.app.log("@", "collision detected $circle")
                     collisionAction.invoke(result.obstacleModel)
                     return false
                 }
                 is Passed -> {
+                    Gdx.app.log("@", "passed $circle")
                     passedAction.invoke(result.obstacleModel)
                 }
             }

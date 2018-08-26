@@ -7,6 +7,7 @@ import com.yarrtest.balloon.UseCase
 import com.yarrtest.balloon.base.ScreenLifecycleListener
 import com.yarrtest.balloon.managers.ScoreManager
 import com.yarrtest.balloon.managers.level.LevelManager
+import com.yarrtest.balloon.screens.game.behaviors.BlackHoleBehavior
 import com.yarrtest.balloon.screens.game.behaviors.PlanetBehavior
 import com.yarrtest.balloon.screens.game.behaviors.RingBehavior
 import com.yarrtest.balloon.screens.game.behaviors.collider.Obstacle
@@ -19,6 +20,7 @@ import com.yarrtest.balloon.screens.game.models.BlackHoleModel
 import com.yarrtest.balloon.screens.game.models.ObstacleModel
 import com.yarrtest.balloon.screens.game.models.RingModel
 import com.yarrtest.balloon.screens.game.usecases.PlanetMoveCheckUseCase
+import com.yarrtest.balloon.screens.game.views.BlackHole
 import com.yarrtest.balloon.screens.game.views.Planet
 import com.yarrtest.balloon.screens.game.views.Ring
 import dagger.Module
@@ -47,6 +49,9 @@ class GameController(
     @Inject
     lateinit var ring: RingBehavior
 
+    @Inject
+    lateinit var blackHole: BlackHoleBehavior
+
     private var planet: PlanetBehavior? = null
 
     //Views
@@ -54,6 +59,8 @@ class GameController(
     lateinit var planetView: Planet
     @Inject
     lateinit var ringView: Ring
+    @Inject
+    lateinit var blackHoleView: BlackHole
 
     private var levelComponent: GameLevelComponent? = null
     private var stageComponent: GameStageComponent? = null
@@ -107,6 +114,7 @@ class GameController(
         switchStageImpl(GrowingStage())
 
         ring.attachView(ringView)
+        blackHole.attachView(blackHoleView)
     }
 
     fun update(delta: Float) {
@@ -200,6 +208,9 @@ class GameController(
         levelComponent?.let {
             ring.detachView()
             ring.dispose()
+
+            blackHole.detachView()
+            blackHole.dispose()
         }
     }
 

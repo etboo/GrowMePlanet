@@ -12,6 +12,7 @@ import com.yarrtest.balloon.base.BaseScreen
 import com.yarrtest.balloon.screens.di.ScreenScope
 import com.yarrtest.balloon.screens.game.di.ControllersProvider
 import com.yarrtest.balloon.screens.game.di.GameScreenComponent
+import com.yarrtest.balloon.screens.game.views.BlackHole
 import com.yarrtest.balloon.screens.game.views.Planet
 import com.yarrtest.balloon.screens.game.views.Ring
 import dagger.Module
@@ -86,6 +87,13 @@ class GameScreen(
     override fun render(delta: Float) {
         super.render(delta)
         controller.update(delta)
+    }
+
+    @ScreenScope
+    @Provides
+    fun createBlackHole(): BlackHole {
+        val texture = Texture(Gdx.files.internal("ball.png"))
+        return BlackHole(layerHandler, texture)
     }
 
     @ScreenScope

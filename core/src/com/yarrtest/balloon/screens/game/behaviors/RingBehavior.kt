@@ -19,42 +19,29 @@ class RingBehavior @Inject constructor(
         @Named (REGISTER_OBSTACLE_USE_CASE)
         registerObstacle: UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>,
         @Named(UNREGISTER_OBSTACLE_USE_CASE)
-        private val unregisterObstacle: UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
-) : BaseBehavior<Ring, RingModel>(
-        model
-), Obstacle {
+        unregisterObstacle: UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
+) : ObstacleBehavior<Ring, RingModel>(
+        model,
+        registerObstacle,
+        unregisterObstacle
+) {
 
-    init {
-        registerObstacle.invoke(this)
-    }
-
-    override fun detachView() {
-        view?.hide()
-        super.detachView()
-
-    }
-
-    override fun attachView(view: Ring) {
-        super.attachView(view)
-        view.show()
-    }
-
-    override fun collide(shape: Circle): CollisionResult {
+    override fun collide(target: Circle): CollisionResult {
         val vertices = model.transformToVertices()
         val displace = Vector2()
 
         val result = Intersector.intersectSegmentCircleDisplace(
                 Vector2(vertices[0], vertices[1]),
                 Vector2(vertices[2], vertices[3]),
-                Vector2(shape.x, shape.y),
-                shape.radius,
+                Vector2(target.x, target.y),
+                target.radius,
                 displace
         )
 
         return when {
             result == Float.POSITIVE_INFINITY -> None()
             displace.x >= model.radius -> Collision(model)
-            shape.y >= model.y -> {
+            target.y >= model.y -> {
                 unregisterObstacle.invoke(this)
                 Passed(model)
             }
@@ -62,11 +49,7 @@ class RingBehavior @Inject constructor(
         }
     }
 
-    override fun dispose() {
-        super.dispose()
-        unregisterObstacle.invoke(this)
 
-    }
 }
 
 private fun RingModel.transformToVertices()

@@ -29,5 +29,4 @@ class BlackHole(
 
         setScale(scaleX, scaleY)
     }
-
 }
