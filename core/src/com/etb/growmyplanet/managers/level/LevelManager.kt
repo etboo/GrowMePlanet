@@ -16,9 +16,9 @@ class LevelManager(store: StoreService) {
         currentLevel = index
         //TODO: load this model from file or config
         return LevelModel(
-                PlanetModel(200f, 200f, 100f),
-                RingModel(200f, 500f, 20f, 20),
-                BlackHoleModel(200f, 900f, 20f, 10)
+                PlanetModel(200f, 200f, 30f),
+                RingModel(200f, 500f, 150f, 20),
+                BlackHoleModel(200f, 900f, 100f, 10)
         )
     }
 }

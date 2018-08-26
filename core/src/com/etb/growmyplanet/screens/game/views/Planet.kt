@@ -30,11 +30,13 @@ class Planet(
         remove()
     }
 
-    override fun resize(newWidth: Float, newHeight: Float) {
-        val scaleX = newWidth / width
-        val scaleY = newHeight / height
+    override fun changePosition(x: Float, y: Float) {
+        setCenterPosition(x, y)
+    }
 
-        setScale(scaleX, scaleY)
+    override fun resize(newSize: Float) {
+        val scaleKoef = newSize / width
+        setScale(scaleKoef)
     }
 
     fun startFallingAnimation() {

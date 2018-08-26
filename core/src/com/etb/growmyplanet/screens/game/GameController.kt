@@ -122,6 +122,8 @@ class GameController(
         controllerTask = null
 
         planet?.act(delta)
+        ring.act(delta)
+        blackHole.act(delta)
     }
 
     @LevelScope

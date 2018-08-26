@@ -31,17 +31,17 @@ class BlackHoleBehavior @Inject constructor(
 
     override fun collide(target: Circle): CollisionResult {
         val distance = getDistanceTo(Vector2(target.x, target.y))
-        return if(distance > model.radius) {
-            None()
-        } else if(model.radius < target.radius){
-            unregisterObstacle.invoke(this)
-            Passed(model)
-        } else {
-            Collision(model)
+        return when {
+            distance > Math.abs(model.radius - target.radius) -> None()
+            model.radius < target.radius -> {
+                unregisterObstacle.invoke(this)
+                Passed(model)
+            }
+            else -> Collision(model)
         }
     }
 
-    private fun getDistanceTo(circleCenter: Vector2): Float {
+    protected fun getDistanceTo(circleCenter: Vector2): Float {
         val x = (model.x - circleCenter.x).toDouble()
         val y = (model.y - circleCenter.y).toDouble()
 

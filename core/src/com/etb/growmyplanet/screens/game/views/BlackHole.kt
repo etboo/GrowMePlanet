@@ -24,14 +24,16 @@ class BlackHole(
         layerHandler.addActorOnLayer(this, Layer.BACKGROUND)
     }
 
+    override fun changePosition(x: Float, y: Float) {
+        setCenterPosition(x, y)
+    }
+
     override fun hide() {
         remove()
     }
 
-    override fun resize(newWidth: Float, newHeight: Float) {
-        val scaleX = newWidth / width
-        val scaleY = newHeight / height
-
-        setScale(scaleX, scaleY)
+    override fun resize(newSize: Float) {
+        val scaleKoef = newSize / width
+        setScale(scaleKoef)
     }
 }

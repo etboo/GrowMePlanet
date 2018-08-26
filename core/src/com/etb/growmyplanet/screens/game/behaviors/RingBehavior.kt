@@ -1,7 +1,6 @@
 package com.etb.growmyplanet.screens.game.behaviors
 
 import com.badlogic.gdx.math.Circle
-import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Vector2
 import com.etb.growmyplanet.UseCase
 import com.etb.growmyplanet.screens.game.REGISTER_OBSTACLE_USE_CASE
@@ -27,31 +26,30 @@ class RingBehavior @Inject constructor(
 ) {
 
     override fun collide(target: Circle): CollisionResult {
-        val vertices = model.transformToVertices()
-        val displace = Vector2()
-
-        val result = Intersector.intersectSegmentCircleDisplace(
-                Vector2(vertices[0], vertices[1]),
-                Vector2(vertices[2], vertices[3]),
-                Vector2(target.x, target.y),
-                target.radius,
-                displace
-        )
-
+        val distanceFromEdgeToCenter = getDistanceFromEdgeToTargetCenter(target)
         return when {
-            result == Float.POSITIVE_INFINITY -> None()
-            displace.x >= model.radius -> Collision(model)
-            target.y >= model.y -> {
-                unregisterObstacle.invoke(this)
-                Passed(model)
+            distanceFromEdgeToCenter < target.radius -> Collision(model)
+            model.y > target.y -> None()
+            else -> {
+                if(model.y == target.y) {
+                    unregisterObstacle.invoke(this)
+                    Passed(model)
+                } else {
+                    None()
+                }
             }
-            else -> None()
         }
     }
-}
 
-private fun RingModel.transformToVertices()
-        = floatArrayOf( this.x - this.radius, this.y, this.x + this.radius, this.y)
+    private fun getDistanceFromEdgeToTargetCenter(circle: Circle): Float {
+        val edgePoint = Vector2(model.x + model.radius, model.y)
+
+        val x = (circle.x - edgePoint.x).toDouble()
+        val y = (circle.y - edgePoint.y).toDouble()
+
+        return Math.sqrt(x * x + y * y).toFloat()
+    }
+}
 
 
 

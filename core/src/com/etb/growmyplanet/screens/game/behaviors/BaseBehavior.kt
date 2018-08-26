@@ -46,19 +46,19 @@ abstract class BaseBehavior<V: BaseView, out M: GameObjectModel>(
 
     override fun positionChanged(x: Float, y: Float) {
         if(validatePositionChanged(x, y)) {
-            view?.setPosition(x, y)
+            view?.changePosition(x, y)
         }
     }
 
     override fun radiusChanged(value: Float) {
         if(validateSizeChanged(value)) {
-            view?.resize(value * 2, value * 2)
+            view?.resize(value * 2)
         }
     }
 
     protected open fun setInitialViewProperties() {
-        view?.setPosition(model.x, model.y)
-        view?.resize(model.radius * 2, model.radius * 2)
+        view?.changePosition(model.x, model.y)
+        view?.resize(model.radius * 2)
     }
 
     open fun dispose() {

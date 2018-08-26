@@ -10,19 +10,20 @@ import com.etb.growmyplanet.screens.game.LayerHandler
  * Created by etb on 22.08.2018.
  */
 
-
 class Ring(
         private val layerHandler: LayerHandler,
         frontTexture: Texture,
         backTexture: Texture
 ) : BaseView {
 
+    private val overlapKoef = .3f
+
     private val frontImage = Image(frontTexture)
     private val backImage = Image(backTexture)
 
     init {
-        frontImage.setAlign(Align.top)
-        backImage.setAlign(Align.bottom)
+        frontImage.setOrigin(Align.top)
+        backImage.setOrigin(Align.bottom)
     }
 
     override fun isShown() = frontImage.parent != null && backImage.parent != null
@@ -37,14 +38,19 @@ class Ring(
         backImage.remove()
     }
 
-    override fun setPosition(x: Float, y: Float) {
-        frontImage.setPosition(x, y - frontImage.height)
-        backImage.setPosition(x, y)
+    override fun changePosition(x: Float, y: Float) {
+        val backImageRealHeight = backImage.height * backImage.scaleY
+        val frontImageRealHeight = frontImage.height * frontImage.scaleY
+        val overlapOffset = overlapKoef * frontImageRealHeight
+
+        frontImage.setCenterPosition(x, y - (frontImageRealHeight - overlapOffset) / 2 )
+        backImage.setCenterPosition(x, y + (backImageRealHeight - overlapOffset) / 2)
     }
 
-    override fun resize(width: Float, height: Float) {
-        frontImage.setSize(width, height)
-        backImage.setSize(width, height)
-    }
+    override fun resize(newSize: Float) {
+        val scaleKoef = newSize / frontImage.width
 
+        frontImage.setScale(scaleKoef)
+        backImage.setScale(scaleKoef)
+    }
 }

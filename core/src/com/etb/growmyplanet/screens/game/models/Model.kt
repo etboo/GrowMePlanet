@@ -16,7 +16,7 @@ sealed class GameObjectModel(
         protected set
 
     var radius: Float = radius
-        protected set(value) {
+        set(value) {
             field = value
             observer?.radiusChanged(value)
         }
