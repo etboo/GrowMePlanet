@@ -68,7 +68,7 @@ class GameScreen(
 
     override fun prepareStage(stage: Stage) {
         if (isShown.not()) {
-            addBackgroundImage()
+            //addBackgroundImage()
             controller.loadLevel(this, 0)
             isShown = true
         }

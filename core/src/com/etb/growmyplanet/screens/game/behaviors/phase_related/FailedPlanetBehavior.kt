@@ -50,6 +50,9 @@ class FailedPlanetBehavior(
         return object : AnimationListener {
             override fun onAnimationFinished() {
                 Gdx.app.log("@", "onAnimationFinished")
+                view?.hide()
+                detachView()
+                dispose()
                 animationFinishedListener.invoke(Unit)
             }
 

@@ -5,7 +5,11 @@ import com.badlogic.gdx.math.Vector2
 import com.etb.growmyplanet.UseCase
 import com.etb.growmyplanet.screens.game.REGISTER_OBSTACLE_USE_CASE
 import com.etb.growmyplanet.screens.game.UNREGISTER_OBSTACLE_USE_CASE
-import com.etb.growmyplanet.screens.game.behaviors.collider.*
+import com.etb.growmyplanet.screens.game.behaviors.collider.Collision
+import com.etb.growmyplanet.screens.game.behaviors.collider.CollisionResult
+import com.etb.growmyplanet.screens.game.behaviors.collider.None
+import com.etb.growmyplanet.screens.game.behaviors.collider.Obstacle
+import com.etb.growmyplanet.screens.game.behaviors.collider.Passed
 import com.etb.growmyplanet.screens.game.di.LevelScope
 import com.etb.growmyplanet.screens.game.models.BlackHoleModel
 import com.etb.growmyplanet.screens.game.views.BlackHole
@@ -15,7 +19,7 @@ import javax.inject.Named
 /**
  * Created by etb on 23.08.2018.
  */
-private const val ROTATION_SPEED = 180f
+private const val ROTATION_SPEED = -180f
 
 @LevelScope
 class BlackHoleBehavior @Inject constructor(

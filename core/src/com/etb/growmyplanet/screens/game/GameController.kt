@@ -1,5 +1,6 @@
 package com.etb.growmyplanet.screens.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
@@ -11,7 +12,12 @@ import com.etb.growmyplanet.screens.game.behaviors.BlackHoleBehavior
 import com.etb.growmyplanet.screens.game.behaviors.PlanetBehavior
 import com.etb.growmyplanet.screens.game.behaviors.RingBehavior
 import com.etb.growmyplanet.screens.game.behaviors.collider.Obstacle
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.*
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.Absorption
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.Collision
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.FloatingPhase
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.GrowingPhase
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.LevelFailed
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.Phase
 import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.GamePhaseComponent
 import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.PlanetBehaviorProvider
 import com.etb.growmyplanet.screens.game.di.GameLevelComponent
@@ -97,6 +103,7 @@ class GameController(
     }
 
     override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+        Gdx.app.log("@", "touchDown x = $x y = $y")
         touchesListener?.let {
             it.onTouchDown()
             return true

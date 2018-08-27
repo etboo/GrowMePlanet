@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align
 import com.etb.growmyplanet.screens.game.Layer
 import com.etb.growmyplanet.screens.game.LayerHandler
 import com.etb.growmyplanet.screens.game.views.animation.HelixAnimation
+import com.etb.growmyplanet.setCenterPosition
 
 /**
  * Created by etb on 22.08.2018.
@@ -39,6 +40,7 @@ class Planet(
     override fun resize(newSize: Float) {
         val scaleKoef = newSize / width
         setScale(scaleKoef)
+
     }
 
     fun startFallingAnimation(listener: AnimationListener) {
@@ -60,4 +62,4 @@ class Planet(
 }
 
 private const val FALLING_DISTANCE = 1000f
-private const val ANIMATION_DURATION = 0.7f
+private const val ANIMATION_DURATION = 1f

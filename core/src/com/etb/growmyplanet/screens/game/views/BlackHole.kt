@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.etb.growmyplanet.screens.game.Layer
 import com.etb.growmyplanet.screens.game.LayerHandler
+import com.etb.growmyplanet.setCenterPosition
 
 /**
  * Created by etb on 23.08.2018.

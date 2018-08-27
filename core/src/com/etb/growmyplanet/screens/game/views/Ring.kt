@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.etb.growmyplanet.screens.game.Layer
 import com.etb.growmyplanet.screens.game.LayerHandler
+import com.etb.growmyplanet.setCenterPosition
 
 /**
  * Created by etb on 22.08.2018.
@@ -46,7 +47,7 @@ class Ring(
         val horizontalOffset = frontImage.width  * frontImage.scaleY * 0.11f
 
         frontImage.setCenterPosition(x, y - (frontImageRealHeight - overlapOffset) / 2 )
-        backImage.setCenterPosition(x + horizontalOffset , y + (backImageRealHeight - overlapOffset) / 2)
+        backImage.setCenterPosition(x = x + horizontalOffset, y = y + (backImageRealHeight - overlapOffset) / 2)
     }
 
     override fun resize(newSize: Float) {
