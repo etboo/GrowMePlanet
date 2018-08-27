@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.etb.growmyplanet.GrowMyPlanetGame
 import com.etb.growmyplanet.base.AppConfig
@@ -26,7 +27,7 @@ import javax.inject.Inject
 @Module
 class GameScreen(
         game: GrowMyPlanetGame,
-        config: AppConfig
+        private val config: AppConfig
 ) : BaseScreen<GrowMyPlanetGame, FitViewport>(
         game,
         FitViewport(config.camWidth, config.camHeight)
@@ -67,7 +68,7 @@ class GameScreen(
 
     override fun prepareStage(stage: Stage) {
         if (isShown.not()) {
-            //TODO: show background
+            addBackgroundImage()
             controller.loadLevel(this, 0)
             isShown = true
         }
@@ -119,6 +120,15 @@ class GameScreen(
         layers.values.forEach{
             stage?.addActor(it)
         }
+    }
+
+    private fun addBackgroundImage() {
+        val texture = Texture(Gdx.files.internal("gfx/background.png"))
+        val actor = Image(texture).also {
+            it.width = config.camWidth
+            it.height = config.camHeight
+        }
+        layerHandler.addActorOnLayer(actor, Layer.BACKGROUND)
     }
 
 }

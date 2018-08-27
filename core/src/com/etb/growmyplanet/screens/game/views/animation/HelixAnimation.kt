@@ -24,10 +24,10 @@ class HelixAnimation(
         val circleCenter = Vector2(circle.x, circle.y)
 
         val parallelAction = ParallelAction(
-                CenteringAnimation(
-                        circle,
-                        durationSec
-                ),
+//                CenteringAnimation(
+//                        circle,
+//                        durationSec
+//                ),
                 SpinAnimation(
                         circleCenter,
                         spinVelocity,
@@ -54,7 +54,7 @@ class HelixAnimation(
             super.setActor(actor)
             if(actor != null) {
 
-                velocity = (circle.radius - actor.width / 2) /
+                velocity = circle.radius  /
                         durationSec
             }
         }
