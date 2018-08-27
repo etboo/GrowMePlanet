@@ -15,6 +15,8 @@ import javax.inject.Named
 /**
  * Created by etb on 23.08.2018.
  */
+private const val ROTATION_SPEED = 180f
+
 @LevelScope
 class BlackHoleBehavior @Inject constructor(
         model: BlackHoleModel,
@@ -29,9 +31,8 @@ class BlackHoleBehavior @Inject constructor(
         unregisterObstacle
 ) {
 
-    override fun attachView(view: BlackHole) {
-        super.attachView(view)
-        view.startAnimation()
+    override fun act(delta: Float) {
+        view?.rotateBy(delta * ROTATION_SPEED)
     }
 
     override fun collide(target: Circle): CollisionResult {

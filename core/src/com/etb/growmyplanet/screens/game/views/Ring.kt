@@ -43,19 +43,19 @@ class Ring(
         val frontImageRealHeight = frontImage.height * frontImage.scaleY
         val overlapOffset = overlapKoef * frontImageRealHeight
 
-        val horizontalOffset = frontImage.width  * frontImage.scaleY * 0.1f
+        val horizontalOffset = frontImage.width  * frontImage.scaleY * 0.11f
 
         frontImage.setCenterPosition(x, y - (frontImageRealHeight - overlapOffset) / 2 )
-        backImage.setCenterPosition(x - horizontalOffset, y + (backImageRealHeight - overlapOffset) / 2)
+        backImage.setCenterPosition(x + horizontalOffset , y + (backImageRealHeight - overlapOffset) / 2)
     }
 
     override fun resize(newSize: Float) {
         val scaleKoef = newSize / frontImage.width
 
-        frontImage.setScale(scaleKoef)
-        backImage.setScale(scaleKoef)
+        frontImage.setScale(scaleKoef * 1.2f, scaleKoef)
+        backImage.setScale(scaleKoef * 1.2f, scaleKoef)
 
-        backImage.x = frontImage.x + frontImage.width  * frontImage.scaleY * 0.1f
+        backImage.x = frontImage.x + frontImage.width  * frontImage.scaleY * 0.12f
 
     }
 }

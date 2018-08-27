@@ -9,7 +9,7 @@
       "ring": {
         "x": 360,
         "y": 500,
-        "radius": 160,
+        "radius": 120,
         "score": 20
       },
       "black_hole": {

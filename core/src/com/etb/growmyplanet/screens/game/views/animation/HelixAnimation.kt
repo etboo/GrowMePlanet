@@ -14,23 +14,18 @@ import com.etb.growmyplanet.screens.game.views.AnimationListener
  */
 class HelixAnimation(
         private val circle: Circle,
-        private val durationSec: Float,
-        private val circlePart: Float = 0.66f
+        private val durationSec: Float
 ) {
 
     fun createAction(completion: AnimationListener): Action {
 
-        val spinVelocity = (2 * MathUtils.PI * circle.radius * circlePart) / durationSec
-        val circleCenter = Vector2(circle.x, circle.y)
-
         val parallelAction = ParallelAction(
-//                CenteringAnimation(
-//                        circle,
-//                        durationSec
-//                ),
+                CenteringAnimation(
+                        circle,
+                        durationSec
+                ),
                 SpinAnimation(
-                        circleCenter,
-                        spinVelocity,
+                        circle,
                         durationSec
                 ),
                 Actions.sizeTo(0f, 0f, durationSec)
@@ -42,19 +37,30 @@ class HelixAnimation(
         )
     }
 
+    private open class TimedAnimation(
+            private val durationSec: Float
+    ):Action() {
+
+        private var elapsedTime = 0f
+
+        override fun act(delta: Float): Boolean {
+            elapsedTime += delta
+            return elapsedTime >= durationSec
+        }
+    }
+
     private class CenteringAnimation(
             private val circle: Circle,
             private val durationSec: Float
-    ) : Action() {
+    ) : TimedAnimation(durationSec) {
 
-        private var elapsedTime = 0f
         private var velocity: Float = 0f
 
         override fun setActor(actor: Actor?) {
             super.setActor(actor)
             if(actor != null) {
 
-                velocity = circle.radius  /
+                velocity = (circle.radius - actor.width * actor.scaleX / 2) /
                         durationSec
             }
         }
@@ -63,34 +69,39 @@ class HelixAnimation(
             val radiansAngle = getAngleFromActorCenterToCircleCenter(actor, circle.center)
 
             actor.setPosition(
-                    actor.x + delta * velocity * MathUtils.cos(radiansAngle),
+                    actor.x - delta * velocity * MathUtils.cos(radiansAngle),
                     actor.y - delta * velocity * MathUtils.sin(radiansAngle)
             )
 
-            elapsedTime += delta
-            return elapsedTime >= durationSec
+            return super.act(delta)
+
         }
     }
 
     private class SpinAnimation(
-            private val center: Vector2,
-            private val velocity: Float,
+            private val circle: Circle,
             private val durationSec: Float
-    ) : Action() {
+    ) : TimedAnimation(durationSec) {
 
-        private var elapsedTime = 0f
+        private var velocity: Float = 0f
+
+        override fun setActor(actor: Actor?) {
+            super.setActor(actor)
+            if(actor != null) {
+                velocity = (circle.radius - actor.width * actor.scaleX / 2) /
+                        durationSec
+            }
+        }
 
         override fun act(delta: Float): Boolean {
-            val radiansAngle = getAngleFromActorCenterToCircleCenter(actor, center)
-            val vectorAngle = radiansAngle + MathUtils.degreesToRadians * 90
+            val radiansAngle = getAngleFromActorCenterToCircleCenter(actor, circle.center)
 
             actor.setPosition(
-                    actor.x + delta * velocity * MathUtils.cos(vectorAngle),
-                    actor.y + delta * velocity * MathUtils.sin(vectorAngle)
+                    actor.x - delta * velocity * MathUtils.sin(radiansAngle),
+                    actor.y - delta * velocity * MathUtils.cos(radiansAngle)
             )
 
-            elapsedTime += delta
-            return elapsedTime >= durationSec
+            return super.act(delta)
         }
     }
 }
@@ -103,8 +114,8 @@ private fun getAngleFromActorCenterToCircleCenter(
         circleCenter: Vector2
 ): Float {
     val actorCenter = Vector2(
-            actor.x + (actor.width * actor.scaleX) / 2,
-            actor.y + (actor.height * actor.scaleY) / 2
+            actor.x + (actor.width  * actor.scaleX) / 2,
+            actor.y + (actor.height * actor.scaleY ) / 2
     )
 
     return MathUtils.atan2(
