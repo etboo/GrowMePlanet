@@ -28,7 +28,6 @@ class PassedPlanetBehavior @Inject constructor(
             override fun onAnimationFinished() {
                 animationFinishedListener.invoke(Unit)
             }
-
         }
     }
 }

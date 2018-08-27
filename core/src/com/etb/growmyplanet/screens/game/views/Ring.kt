@@ -17,14 +17,12 @@ class Ring(
         backTexture: Texture
 ) : BaseView {
 
-    private val overlapKoef = .01f
-
     private val frontImage = Image(frontTexture)
     private val backImage = Image(backTexture)
 
     init {
-        frontImage.setOrigin(Align.top)
-        backImage.setOrigin(Align.bottom)
+        frontImage.setOrigin(Align.center)
+        backImage.setOrigin(Align.center)
     }
 
     override fun isShown() = frontImage.parent != null && backImage.parent != null
@@ -40,23 +38,14 @@ class Ring(
     }
 
     override fun changePosition(x: Float, y: Float) {
-        val backImageRealHeight = backImage.height * backImage.scaleY
-        val frontImageRealHeight = frontImage.height * frontImage.scaleY
-        val overlapOffset = overlapKoef * frontImageRealHeight
-
-        val horizontalOffset = frontImage.width  * frontImage.scaleY * 0.11f
-
-        frontImage.setCenterPosition(x, y - (frontImageRealHeight - overlapOffset) / 2 )
-        backImage.setCenterPosition(x = x + horizontalOffset, y = y + (backImageRealHeight - overlapOffset) / 2)
+        frontImage.setCenterPosition(x, y )
+        backImage.setCenterPosition(x, y)
     }
 
     override fun resize(newSize: Float) {
         val scaleKoef = newSize / frontImage.width
 
-        frontImage.setScale(scaleKoef * 1.2f, scaleKoef)
-        backImage.setScale(scaleKoef * 1.2f, scaleKoef)
-
-        backImage.x = frontImage.x + frontImage.width  * frontImage.scaleY * 0.12f
-
+        frontImage.setScale(scaleKoef * 1.23f, scaleKoef)
+        backImage.setScale(scaleKoef * 1.23f, scaleKoef)
     }
 }

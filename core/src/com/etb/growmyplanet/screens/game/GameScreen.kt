@@ -41,9 +41,7 @@ class GameScreen(
     private var isShown = false
     private val layers by lazy(LazyThreadSafetyMode.NONE) {
         mutableMapOf<Layer, Group>().also { map ->
-            Layer.values().forEach {
-                map[it] = Group()
-            }
+           createAndPutLayersInto(map)
         }
     }
 
@@ -68,8 +66,8 @@ class GameScreen(
 
     override fun prepareStage(stage: Stage) {
         if (isShown.not()) {
-            //addBackgroundImage()
-            controller.loadLevel(this, 0)
+            addBackgroundImage()
+            controller.start(this)
             isShown = true
         }
     }
@@ -112,13 +110,34 @@ class GameScreen(
 
     @ScreenScope
     @Provides
-    fun provideSwapLevelsUseCase(): SwapLevelsUseCase {
-        return SwapLevelsUseCase(layers.values)
+    fun provideSwapLevelsUseCase(player: Planet): SwapLevelsUseCase {
+        return SwapLevelsUseCase(
+                player,
+                { swapLayersAndReturnOld() },
+                { addLayerGroups() }
+        )
+    }
+
+    private fun swapLayersAndReturnOld(): Collection<Group> {
+        val result = layers.copyValues()
+        layers.clear()
+        createAndPutLayersInto(layers)
+
+        return result
     }
 
     private fun addLayerGroups() {
         layers.values.forEach{
             stage?.addActor(it)
+        }
+    }
+
+    private fun createAndPutLayersInto(map: MutableMap<Layer, Group>) {
+        Layer.values().forEach {
+            map[it] = Group().also {
+                it.width = config.camWidth
+                it.height = config.camHeight
+            }
         }
     }
 
@@ -132,5 +151,7 @@ class GameScreen(
     }
 
 }
+
+private fun <K, V> Map<K, V>.copyValues() = HashSet(values)
 
 private const val TAG = "com.etb.growmyplanet.screens.game.GameScreen"

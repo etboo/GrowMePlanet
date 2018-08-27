@@ -18,9 +18,10 @@ class LevelManager(
         levels = parseJson(gson)
     }
 
-    fun loadLevel(index: Int): LevelModel {
-        currentLevel = index
-        return levels[index]
+    fun loadNextLevel(): LevelModel {
+        return levels[currentLevel].also {
+            currentLevel += 1
+        }
     }
 
     private fun parseJson(gson: Gson): List<LevelModel> {

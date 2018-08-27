@@ -58,6 +58,11 @@ class Planet(
 
     fun startPassedAnimation(listener: AnimationListener) {
 
+        val action = Actions.sequence(
+                Actions.moveTo(x, parent.height, 0.6f),
+                Actions.run { listener.onAnimationFinished() }
+        )
+        addAction(action)
     }
 }
 

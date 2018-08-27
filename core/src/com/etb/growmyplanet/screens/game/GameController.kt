@@ -12,15 +12,11 @@ import com.etb.growmyplanet.screens.game.behaviors.BlackHoleBehavior
 import com.etb.growmyplanet.screens.game.behaviors.PlanetBehavior
 import com.etb.growmyplanet.screens.game.behaviors.RingBehavior
 import com.etb.growmyplanet.screens.game.behaviors.collider.Obstacle
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.Absorption
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.Collision
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.FloatingPhase
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.GrowingPhase
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.LevelFailed
-import com.etb.growmyplanet.screens.game.behaviors.phase_related.Phase
+import com.etb.growmyplanet.screens.game.behaviors.phase_related.*
 import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.GamePhaseComponent
 import com.etb.growmyplanet.screens.game.behaviors.phase_related.di.PlanetBehaviorProvider
 import com.etb.growmyplanet.screens.game.di.GameLevelComponent
+import com.etb.growmyplanet.screens.game.di.GameScreenComponent
 import com.etb.growmyplanet.screens.game.di.LevelScope
 import com.etb.growmyplanet.screens.game.models.BlackHoleModel
 import com.etb.growmyplanet.screens.game.models.ObstacleModel
@@ -71,6 +67,8 @@ class GameController(
     @Inject
     lateinit var blackHoleView: BlackHole
 
+    private lateinit var parentComponent: GameScreenComponent
+
     private var levelComponent: GameLevelComponent? = null
     private var stageComponent: GamePhaseComponent? = null
 
@@ -112,19 +110,9 @@ class GameController(
         return false
     }
 
-    fun loadLevel(gameScreen: GameScreen, index: Int) {
-        disposeLevelBehaviors()
-
-        levelComponent = gameScreen.component?.plus(
-                this,
-                levelManager.loadLevel(index)
-        )
-        levelComponent?.inject(this)
-
-        switchStageImpl(GrowingPhase())
-
-        ring.attachView(ringView)
-        blackHole.attachView(blackHoleView)
+    fun start(gameScreen: GameScreen) {
+        parentComponent = gameScreen.component!!
+        loadNextLevel()
     }
 
     fun update(delta: Float) {
@@ -160,7 +148,14 @@ class GameController(
     @Provides
     @Named(UNREGISTER_OBSTACLE_USE_CASE)
     fun provideObstacleUnregistrator(): UseCase<@JvmWildcard Obstacle, @JvmWildcard Unit>
-            = { obstacles.remove(it) }
+            = {
+        if(obstacles.contains(it)) {
+            obstacles.remove(it)
+            if(obstacles.isEmpty()) {
+                switchStage(LevelPassed())
+            }
+        }
+    }
 
     @LevelScope
     @Provides
@@ -194,9 +189,9 @@ class GameController(
     @Named(PASSED_ANIMATION_FINISHED_USE_CASE)
     fun providePassedAnimationListener(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit>
             = {
-//            swapLevelsUseCase.invoke()
-//        loadLevel()
-
+            swapLevelsUseCase.invoke {
+                loadNextLevel()
+            }
     }
 
     @LevelScope
@@ -209,6 +204,24 @@ class GameController(
             passedAction = scored,
             collisionAction = collided
     )
+
+    private fun loadNextLevel() {
+        disposeLevelBehaviors()
+
+        levelComponent = parentComponent.plus(
+                this,
+                levelManager.loadNextLevel()
+        )
+        levelComponent?.inject(this)
+
+        switchStageImpl(GrowingPhase())
+        attachLevelScopeViews()
+    }
+
+    private fun attachLevelScopeViews() {
+        ring.attachView(ringView)
+        blackHole.attachView(blackHoleView)
+    }
 
     private fun switchStage(newStage: Phase) {
         controllerTask = Runnable { switchStageImpl(newStage) }
