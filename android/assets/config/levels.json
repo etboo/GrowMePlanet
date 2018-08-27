@@ -2,18 +2,18 @@
   "levels": [
     {
       "planet": {
-        "x": 200,
+        "x": 360,
         "y": 200,
         "radius": 30
       },
       "ring": {
-        "x": 200,
+        "x": 360,
         "y": 500,
-        "radius": 150,
+        "radius": 160,
         "score": 20
       },
       "black_hole": {
-        "x": 200,
+        "x": 360,
         "y": 900,
         "radius": 100,
         "score": 10

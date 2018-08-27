@@ -90,22 +90,23 @@ class GameScreen(
     @ScreenScope
     @Provides
     fun createBlackHole(): BlackHole {
-        val texture = Texture(Gdx.files.internal("gfx/ball.png"))
+        val texture = Texture(Gdx.files.internal("gfx/blackhole.png"))
         return BlackHole(layerHandler, texture)
     }
 
     @ScreenScope
     @Provides
     fun createPlanetView(): Planet {
-        val texture = Texture(Gdx.files.internal("gfx/ball.png"))
+        val texture = Texture(Gdx.files.internal("gfx/planet.png"))
         return Planet(layerHandler, texture)
     }
 
     @ScreenScope
     @Provides
     fun createRingView(): Ring {
-        val texture = Texture(Gdx.files.internal("gfx/net.png"))
-        return Ring(layerHandler, texture, texture)
+        val backTexture = Texture(Gdx.files.internal("gfx/ring1.png"))
+        val frontTexture = Texture(Gdx.files.internal("gfx/ring2.png"))
+        return Ring(layerHandler, frontTexture, backTexture)
     }
 
     @ScreenScope

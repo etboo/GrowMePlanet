@@ -1,6 +1,7 @@
 package com.etb.growmyplanet.screens.game.views
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Align
 import com.etb.growmyplanet.screens.game.Layer
@@ -36,4 +37,9 @@ class BlackHole(
         val scaleKoef = newSize / width
         setScale(scaleKoef)
     }
+
+    fun startAnimation() {
+        addAction(Actions.rotateBy(4000f, 10f))
+    }
+
 }

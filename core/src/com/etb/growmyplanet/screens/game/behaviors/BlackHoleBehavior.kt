@@ -29,6 +29,11 @@ class BlackHoleBehavior @Inject constructor(
         unregisterObstacle
 ) {
 
+    override fun attachView(view: BlackHole) {
+        super.attachView(view)
+        view.startAnimation()
+    }
+
     override fun collide(target: Circle): CollisionResult {
         val distance = getDistanceTo(Vector2(target.x, target.y))
         return when {
@@ -47,6 +52,4 @@ class BlackHoleBehavior @Inject constructor(
 
         return Math.sqrt(x * x + y * y).toFloat()
     }
-
-
 }
