@@ -4,13 +4,13 @@
       "ring": {
         "x": 360,
         "y": 500,
-        "radius": 120,
+        "radius": 170,
         "score": 20
       },
       "black_hole": {
         "x": 360,
         "y": 900,
-        "radius": 100,
+        "radius": 80,
         "score": 10
       }
     },
@@ -18,13 +18,13 @@
       "ring": {
         "x": 360,
         "y": 500,
-        "radius": 120,
+        "radius": 160,
         "score": 20
       },
       "black_hole": {
         "x": 360,
         "y": 900,
-        "radius": 100,
+        "radius": 90,
         "score": 10
       }
     },

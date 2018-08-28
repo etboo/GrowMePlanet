@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align
 import com.etb.growmyplanet.UseCase
 import com.etb.growmyplanet.managers.level.START_PLAYER_RADIUS
 import com.etb.growmyplanet.managers.level.START_PLAYER_Y
+import com.etb.growmyplanet.screens.game.Layer
 
 /**
  * Created by etb on 26.08.2018.
@@ -29,7 +30,7 @@ class SwapLevelsUseCase(
             group.addAction(
                     SequenceAction().also { action ->
                         action.addAction(getAnimation(group, scaleKoef))
-                        if (index == 1) {
+                        if (index == Layer.PLAYER_LEVEL.ordinal) {
                             action.addAction(
                                     getLevelChangeAction(
                                         parseNewLevelAndGetNewPlayerUseCase
@@ -46,11 +47,12 @@ class SwapLevelsUseCase(
     private fun getAnimation(group: Actor, scaleKoef: Float): Action {
         return Actions.parallel(
                 Actions.scaleTo(scaleKoef, scaleKoef, 1f),
-                Actions.moveBy(
-                        0f,
-                        -group.height + (currPlayer.height * currPlayer.scaleY * 0.5f + START_PLAYER_Y),
+                Actions.moveTo(
+                        group.x,
+                        -group.height + START_PLAYER_Y + currPlayer.height * currPlayer.scaleY * .2f,
                         1f
-                )
+                ),
+                Actions.delay(.5f)
         )
     }
 
