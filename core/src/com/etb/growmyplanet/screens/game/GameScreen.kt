@@ -34,16 +34,20 @@ class GameScreen(
 ) {
 
     var component: GameScreenComponent? = null
-    private set
+        private set
 
     @Inject lateinit var controller: GameController
 
     private var isShown = false
     private val layers by lazy(LazyThreadSafetyMode.NONE) {
         mutableMapOf<Layer, Group>().also { map ->
-           createAndPutLayersInto(map)
+            createAndPutLayersInto(map)
         }
     }
+
+    private val gameObjectsLayers: Map<Layer, Group>
+        get() = layers.filterKeys { it.isGameObjectsLayer() }
+
 
     private val layerHandler = object : LayerHandler {
         override fun addActorOnLayer(actor: Actor, layer: Layer) {
@@ -113,24 +117,26 @@ class GameScreen(
     fun provideSwapLevelsUseCase(player: Planet): SwapLevelsUseCase {
         return SwapLevelsUseCase(
                 player,
-                { layers.copyValues() },
-                { swapLayersWithNewOnes() },
+                { layers.filterKeys { it.isGameObjectsLayer() }.values },
+                { swapGameObjectsLayersWithNewOnes() },
                 { addLayerGroups() }
         )
     }
 
-    private fun swapLayersWithNewOnes() {
-        layers.values.forEach {
+    private fun swapGameObjectsLayersWithNewOnes() {
+        gameObjectsLayers.values.forEach {
             it.clearChildren()
         }
 
-        layers.clear()
+        gameObjectsLayers.keys.forEach {
+            layers.remove(it)
+        }
 
         createAndPutLayersInto(layers)
     }
 
     private fun addLayerGroups() {
-        layers.values.forEach{
+        layers.values.forEach {
             stage?.addActor(it)
         }
     }

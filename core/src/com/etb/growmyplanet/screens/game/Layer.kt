@@ -2,7 +2,13 @@ package com.etb.growmyplanet.screens.game
 
 enum class Layer {
     BACKGROUND,
+    BEHIND_PLAYER,
     PLAYER_LEVEL,
-    FOREGROUND
+    IN_FRONT_OF_PLAYER,
+    FOREGROUND;
+
+    fun isGameObjectsLayer()
+            = ordinal < FOREGROUND.ordinal && ordinal > BACKGROUND.ordinal
+
 }
 

@@ -22,7 +22,7 @@ class BlackHole(
     override fun isShown() = parent != null
 
     override fun show() {
-        layerHandler.addActorOnLayer(this, Layer.BACKGROUND)
+        layerHandler.addActorOnLayer(this, Layer.BEHIND_PLAYER)
     }
 
     override fun changePosition(x: Float, y: Float) {

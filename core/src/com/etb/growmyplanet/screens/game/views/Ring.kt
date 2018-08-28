@@ -28,8 +28,8 @@ class Ring(
     override fun isShown() = frontImage.parent != null && backImage.parent != null
 
     override fun show() {
-        layerHandler.addActorOnLayer(frontImage, Layer.FOREGROUND)
-        layerHandler.addActorOnLayer(backImage, Layer.BACKGROUND)
+        layerHandler.addActorOnLayer(frontImage, Layer.IN_FRONT_OF_PLAYER)
+        layerHandler.addActorOnLayer(backImage, Layer.BEHIND_PLAYER)
     }
 
     override fun hide() {
