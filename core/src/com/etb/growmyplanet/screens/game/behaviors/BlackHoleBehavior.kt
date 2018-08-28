@@ -5,11 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.etb.growmyplanet.UseCase
 import com.etb.growmyplanet.screens.game.REGISTER_OBSTACLE_USE_CASE
 import com.etb.growmyplanet.screens.game.UNREGISTER_OBSTACLE_USE_CASE
-import com.etb.growmyplanet.screens.game.behaviors.collider.Collision
-import com.etb.growmyplanet.screens.game.behaviors.collider.CollisionResult
-import com.etb.growmyplanet.screens.game.behaviors.collider.None
-import com.etb.growmyplanet.screens.game.behaviors.collider.Obstacle
-import com.etb.growmyplanet.screens.game.behaviors.collider.Passed
+import com.etb.growmyplanet.screens.game.behaviors.collider.*
 import com.etb.growmyplanet.screens.game.di.LevelScope
 import com.etb.growmyplanet.screens.game.models.BlackHoleModel
 import com.etb.growmyplanet.screens.game.views.BlackHole
@@ -43,7 +39,7 @@ class BlackHoleBehavior @Inject constructor(
         val distance = getDistanceTo(Vector2(target.x, target.y))
         return when {
             distance > Math.abs(model.radius - target.radius) -> None()
-            model.radius < target.radius -> {
+            model.radius <= target.radius -> {
                 unregisterObstacle.invoke(this)
                 Passed(model)
             }

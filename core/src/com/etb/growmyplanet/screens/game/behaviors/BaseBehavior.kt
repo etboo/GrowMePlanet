@@ -26,16 +26,14 @@ abstract class BaseBehavior<V: BaseView, out M: GameObjectModel>(
     open fun validateSizeChanged(value: Float): Boolean = true
 
     open fun act(delta: Float) {
-        Gdx.app.log(TAG, "act $delta")
     }
 
     open fun detachView() {
-        Gdx.app.log(TAG, "stop")
         this.view = null
     }
 
     open fun attachView(view: V) {
-        Gdx.app.log(TAG, "start")
+        Gdx.app.log(TAG, "attachView $view")
         this.view = view
         setInitialViewProperties()
 

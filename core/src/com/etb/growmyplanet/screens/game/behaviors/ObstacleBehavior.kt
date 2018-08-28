@@ -22,6 +22,6 @@ abstract class ObstacleBehavior<V: BaseView, M: GameObjectModel>(
 
     override fun dispose() {
         super.dispose()
-        unregisterObstacle.invoke(this)
+        //unregisterObstacle.invoke(this)
     }
 }

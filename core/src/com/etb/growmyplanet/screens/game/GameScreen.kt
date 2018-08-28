@@ -113,17 +113,20 @@ class GameScreen(
     fun provideSwapLevelsUseCase(player: Planet): SwapLevelsUseCase {
         return SwapLevelsUseCase(
                 player,
-                { swapLayersAndReturnOld() },
+                { layers.copyValues() },
+                { swapLayersWithNewOnes() },
                 { addLayerGroups() }
         )
     }
 
-    private fun swapLayersAndReturnOld(): Collection<Group> {
-        val result = layers.copyValues()
-        layers.clear()
-        createAndPutLayersInto(layers)
+    private fun swapLayersWithNewOnes() {
+        layers.values.forEach {
+            it.clearChildren()
+        }
 
-        return result
+        layers.clear()
+
+        createAndPutLayersInto(layers)
     }
 
     private fun addLayerGroups() {

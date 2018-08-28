@@ -70,9 +70,9 @@ class GameController(
     private lateinit var parentComponent: GameScreenComponent
 
     private var levelComponent: GameLevelComponent? = null
-    private var stageComponent: GamePhaseComponent? = null
+    private var phaseComponent: GamePhaseComponent? = null
 
-    private lateinit var stage: Phase
+    private lateinit var phase: Phase
 
     private val obstacles = mutableListOf<Obstacle>()
     private var touchesListener: ScreenTouchesListener? = null
@@ -129,7 +129,7 @@ class GameController(
     @Named(GROWTH_TOUCH_UP_USE_CASE)
     fun provideGrowthTouchAction(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit> = {
         touchesListener = null
-        switchStage(FloatingPhase())
+        switchGamePhase(FloatingPhase())
     }
 
     @LevelScope
@@ -152,7 +152,7 @@ class GameController(
         if(obstacles.contains(it)) {
             obstacles.remove(it)
             if(obstacles.isEmpty()) {
-                switchStage(LevelPassed())
+                switchGamePhase(LevelPassed())
             }
         }
     }
@@ -173,7 +173,7 @@ class GameController(
             is RingModel -> Collision()
         }
 
-        switchStage(LevelFailed(failedReason))
+        switchGamePhase(LevelFailed(failedReason))
     }
 
     @LevelScope
@@ -181,7 +181,7 @@ class GameController(
     @Named(FAILED_ANIMATION_FINISHED_USE_CASE)
     fun provideFailedAnimationListener(): UseCase<@JvmWildcard Unit, @JvmWildcard Unit>
      = {
-        //TODO: switch stage to level_finished
+        //TODO: switch phase to level_finished
     }
 
     @LevelScope
@@ -214,7 +214,7 @@ class GameController(
         )
         levelComponent?.inject(this)
 
-        switchStageImpl(GrowingPhase())
+        switchGamePhaseImpl(GrowingPhase())
         attachLevelScopeViews()
     }
 
@@ -223,16 +223,17 @@ class GameController(
         blackHole.attachView(blackHoleView)
     }
 
-    private fun switchStage(newStage: Phase) {
-        controllerTask = Runnable { switchStageImpl(newStage) }
+    private fun switchGamePhase(newStage: Phase) {
+        controllerTask = Runnable { switchGamePhaseImpl(newStage) }
     }
 
-    private fun switchStageImpl(newStage: Phase) {
+    private fun switchGamePhaseImpl(newPhase: Phase) {
+        Gdx.app.log("@", "switch phase $newPhase")
         disposeStageBehaviors()
 
-        stage = newStage
-        stageComponent = levelComponent?.stage()?.also {
-            val provider = PlanetBehaviorProvider(newStage)
+        phase = newPhase
+        phaseComponent = levelComponent?.stage()?.also {
+            val provider = PlanetBehaviorProvider(newPhase)
             it.inject(provider)
             planet = provider.planetBehavior
             planet?.attachView(planetView)
